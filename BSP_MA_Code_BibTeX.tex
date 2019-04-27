@@ -71,7 +71,7 @@
 \title{Rebuilding a SharePoint 2013 Application with Angular 7 and Reactive Programming}
 \author{Dominik Hack}
 \studentnumber{1610257044}
-\supervisor{---}
+\supervisor{DI Thomas Rongitsch}
 \place{Vienna}
 \kurzfassung{text}
 \schlagworte{schlagwort1}
@@ -134,29 +134,49 @@
 }}}
 
 \maketitle
-
 \chapter{Introduction}
-SharePoint, SharePoint Requirements (IE), Project Requirements (features), old solution, rebuilding with angular because of new features and same cost of developing a new application and not building on sharepoint feature (also extensibility and encapsulation)
+describe starting point, why will this project be realised, what should be achieved?, motivation, SharePoint \cite{SharePoint}, SharePoint Requirements (IE), Project Requirements (features), old solution, rebuilding with angular because of new features and same cost of developing a new application and not building on sharepoint feature (also extensibility, maintenance and encapsulation), better for company to have knowledge in Angular than in Sharepoint 2013 (because more projects also use angular), possible research questions: extensibility (1 of 4 team members have experience in developing sharepoint apps, 3 of 4 team members have experience in developing angular apps), maintenance?, observer patter in reactive programming?, overhead of redux?
 \clearpage
 
 
 \chapter{Tools \& Frameworks} 
+what will be presented in this chapter (reactive programming; tools to use this paradigm with: ReactiveX, Redux and NgRx; Angular; why typescript; what components are; introduction of important tools used by angular: npm, webpack and babel),
+For the implementation of this project a technology had to be decided on that meets the requirements of being integrated into and communicate with SharePoint 2013.
 
 \section{Reactive Programming}
-state, store, action, reducer, selector, effects
+If an interaction with a reactive application takes place, a event occurs which the software will notice and then react on it in a certain way. Therefore a reactive software system could be any application with a graphical user interface (GUI), a network monitoring service or even a calculator.
+what is reactive programming: programming paradigm supporting language-level abstractions \cite[p.~953]{RPWalkthrough},
+why should it be used:, 
+two ways (also explain figure): 
+observer pattern \cite[p.~360-372]{ObserverDP} (in object oriented programming using observer pattern, decouples observers from observables or subjects, observers subscribe to observables, observables do not know their subsribers, when observables change their state they notify ), event handlers return void
+vs the other way (signals or behaviours: time changing values, treated as constraints of the language runtime, when an inconcistency of a signal or behaviour is detected a recalculation is triggered \cite[p.~797]{DebuggingRP} ), less error prone, easier to understand, still immature field -> lack of developer tools like debuggers \cite[p.~796]{DebuggingRP} 
+einiges an Forschung wurde schon betrieben und nach der Einführung von funcitonal programming in Haskell wurde dieses konzept auch in Scheme (FrTime \cite{FrTime}), Scala (Scala.react \cite{DeprecatingOP}) und JavaScript (Flapjax \cite{Flapjax}) implementiert, sogar wurde in Microsofts Reactive Extensions konzepte von reactive programming implementiert \cite[p.~954]{RPWalkthrough} \cite[p.~796]{DebuggingRP}
 \subsection{ReactiveX}
+general introduction (what is it \cite{ReactiveExtensions} (von Microsoft aber open source), why should it be used), \cite{ReactiveX}, bringing functional-reactive-programming-like reactivity 
+observables \cite{RxObservables}
 \subsection{Redux}
-\subsection{ngrx}
+general introduction (what is it, why should it be used), \cite{Redux}, motivation why redux \cite{ReduxIntroMoti}, core concept \cite{ReduxIntroCC}, three principles \cite{ReduxIntro3P}, figure for explanation
+\subsection{NgRx}
+general introduction (what is it, why should it be used), \cite{Ngrx}, ng/store, effects
 
 \section{Angular}
+what is angular?, what is it for?, dependency injection, data binding, \cite[p.~]{YakovFainAngular}
 \subsection{TypeScript}
+general introduction (what is it, why should it be used), 
 \subsection{Components}
-
-\section{NPM}
+general introduction (what is it, why should it be used), 
+\subsection{npm}
+general introduction (what is it, why should it be used), 
 tool to install everything js based
+\subsection{Webpack}
+general introduction (what is it, why should it be used), 
+bundling assets (vendor, main, styles, etc.)
+\subsection{Babel}
+general introduction (what is it, why should it be used), 
+polyfills
 \clearpage 
 
-\chapter{Development}
+\chapter{Implementation}
 
 \section{Project Management}
 
@@ -167,14 +187,12 @@ CI Process, TFS
 Microsoft Docs about the script injection feature
 
 \section{Software Architecture}
-\subsection{Project Structure}
-alert, blog, core, entities, services, service entities, shared, containers, components, routing (router, guard)
 
-\subsection{Communication between Angular and SharePoint}
-pnpjs, "REST" API, JSOM, CSOM, own backend in sharepoint
+\subsection{Software Components}
+alert, blog, core, entities, services, service entities, shared, containers, components, routing (router, guard); figure of project structure;
 
-\subsection{Tooling}
-polyfills, vendor, minifying
+\subsection{Interfaces}
+pnpjs, "REST" API, JSOM, CSOM, own backend in sharepoint, graphics?
 
 \subsection{Styles}
 SASS, BEM
@@ -188,7 +206,7 @@ rxjs, easier use of the redux pattern, more features for reactive programming, c
 explain implementation in form of an example like "showing blog entry", Store, Actions, State, Reducer, Selector, Effect, etc., 
 
 \subsection{Unit Testing}
-testing with reactive programming
+testing with reactive programming; karma;
 
 \clearpage
 
@@ -225,6 +243,7 @@ presenting finished solution
 \addcontentsline{toc}{chapter}{\listacroname}
 \chapter*{\listacroname}
 \begin{acronym}[XXXXX]
+    \acro{CLI}[CLI]{Command-Line Interface}
     \acro{API}[API]{Application Programming Interface}
     \acro{ECMA}[ECMA]{European Computer Manufacturers Association}
     \acro{W3C}[W3C]{World Wide Web Consortium}
