@@ -64,6 +64,7 @@
 % Die nachfolgenden Pakete stellen sonst nicht benötigte Features zur Verfügung
 \usepackage{blindtext}
 \usepackage{parskip}
+\usepackage{epstopdf}
 
 %
 % Einträge für Deckblatt, Kurzfassung, etc.
@@ -148,7 +149,7 @@ If an interaction with a reactive application takes place, a event occurs which 
 two main approaches to implement a reactive application (also explain figure):
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.75\linewidth]{PICs/pseudo_Code_reactive_2_ways.png}
+\includegraphics[width=0.75\linewidth]{PICs/pseudo_Code_reactive_2_ways.eps}
 \caption{JavaScript-like pseudo code of the observer pattern approach (left) and the signals and vars approach (right) \cite[p.~797]{DebuggingRP} \cite[p.~3]{PositivEffectOfRP}}\label{Fig1}
 \end{figure}
 traditional approach observer pattern \cite[p.~360-372]{ObserverDP}, decouples event consumers from event producers \cite[p.~953]{RPWalkthrough}, (in object oriented programming using observer pattern, decouples observers or subscribers from observables or subjects, observers subscribe to observables, observables do not know their subscribers, when observables change their state they notify their observers depending on the implementation this can be done through emitting events. When a subscriber learns of a change in the state of the subject, he adjusts his state to that of the subject. \cite[p.~363]{ObserverDP}),
@@ -160,30 +161,40 @@ vs the other way, what is reactive programming: programming paradigm supporting 
 \item Favoring data flow over control flow: Calculations of the software system are triggered by new data or events and are not depending on the execution of the control flow \cite[p.~2]{PositivEffectOfRP}.
 \end{itemize}
 einiges an Forschung wurde schon betrieben und nach der Einführung von funcitonal reactive programming in Haskell wurde dieses konzept auch in Scheme (FrTime \cite{FrTime}), Scala (Scala.react \cite{DeprecatingOP}) und JavaScript (Flapjax \cite{Flapjax}) implementiert, sogar wurde in Microsofts Reactive Extensions (RX or ReactiveX) konzepte von reactive programming implementiert \cite[p.~954]{RPWalkthrough} \cite[p.~796]{DebuggingRP} \cite[p.~2]{PositivEffectOfRP}
-(signals or behaviours: time changing values, treated as constraints of the language runtime, when an inconcistency of a signal or behaviour is detected a recalculation is triggered \cite[p.~797]{DebuggingRP} \cite[p.~3]{PositivEffectOfRP}, can either depend on other signals or vars, vars are reactive values like signals but without dependencies \cite[p.~2]{PositivEffectOfRP}), less error prone, easier to understand, still immature field -> lack of developer tools like debuggers \cite[p.~796]{DebuggingRP} 
+(signals or behaviours: time changing values, treated as constraints of the language runtime, when an inconcistency of a signal or behaviour is detected a recalculation is triggered \cite[p.~797]{DebuggingRP} \cite[p.~3]{PositivEffectOfRP}, can either depend on other signals or vars, vars are reactive values like signals but without dependencies \cite[p.~2]{PositivEffectOfRP}), less error prone, easier to understand, still immature field -> lack of developer tools like debuggers \cite[p.~796]{DebuggingRP}
+
 \subsection{ReactiveX}
-general introduction (what is it \cite{ReactiveExtensions} (von Microsoft aber open source), why should it be used), \cite{ReactiveX}, bringing functional-reactive-programming-like reactivity 
+general introduction (what is it \cite{ReactiveExtensions} (von Microsoft aber open source), why should it be used) \cite{ReactiveX}, bringing functional-reactive-programming-like reactivity (FRP-like reactivity), marble-diagrams
 observables, observables background with reactor pattern \cite{RxObservables}
+
 \subsection{Redux}
 general introduction (what is it, why should it be used), \cite{Redux}, motivation why redux \cite{ReduxIntroMoti}, core concept \cite{ReduxIntroCC}, three principles \cite{ReduxIntro3P}, figure for explanation
+
 \subsection{NgRx}
 general introduction (what is it, why should it be used), \cite{Ngrx}, ng/store, effects
 
+
 \section{Angular}
 what is angular?, what is it for?, dependency injection, data binding, \cite[p.~]{YakovFainAngular}
+
 \subsection{TypeScript}
 general introduction (what is it, why should it be used), 
+
 \subsection{Components}
 general introduction (what is it, why should it be used), 
+
 \subsection{npm}
 general introduction (what is it, why should it be used), 
 tool to install everything js based
+
 \subsection{Webpack}
 general introduction (what is it, why should it be used), 
 bundling assets (vendor, main, styles, etc.)
+
 \subsection{Babel}
 general introduction (what is it, why should it be used), 
 polyfills
+
 \clearpage 
 
 \chapter{Implementation}
@@ -192,12 +203,31 @@ The following sections deal with describing the processes utilized to ensure the
 \section{Project Management}
 To successfully complete this project with as few errors as possible and to develop a product that adds business value to the customer and satisfies the customers' needs, the agile project management framework "Scrum" \cite{Scrum} was employed. The scrum team consisted of 3 developers, one of whom was one half of his time involved in scrum master activities, and one product owner. The product owner took care of analyzing the current problems together with the customer in order to develop a possible solution. Based on these requirements, a first version of the backlog was created to give the development team an overview of the product to be developed. Subsequently, the developer team estimated the story points of each user story using planning poker. With this information the product owner calculated the offer for the customer. After the contract was signed scrum team met for a project kick-off meeting to discuss the highest priority user stories.
 \\[\baselineskip]
-The length of a sprint for this project was one week, since at first the user stories were small enough so that the commitment to the sprint goal could be kept. Later, the length of a sprint was increased to two weeks, because on the one hand some user stories were too large to finish in a week and on the other hand a developer had to be assigned to other projects for some time. Sprints were planned using the user-story or task-board tools provided by the company's TFS (Team Foundation Server) \cite{TFS}.
+The length of a sprint for this project was one week, since at first the user stories were small enough so that the commitment to the sprint goal could be kept. Later, the length of a sprint was increased to two weeks, because on the one hand some user stories were too large to finish in a week and on the other hand a developer had to be assigned to other projects for some time. Sprints were planned using the user-story- and task-board-backlog tools provided by the company's TFS (Team Foundation Server) \cite{TFS}.
 Every day a daily stand-up was held where each developer announced the current status of their user stories. If there was any difficulty implementing a user story, after the meeting, the task in question was discussed with at least one other developer. If no solution was found, the product owner was contacted to discuss the problem.
-what happens when a user story is finished, explain technical details below everything else in here (pull request, code review, resolving user story with product owner), reviewing why a commitment could not be kept 
+what happens when a user story (acceptance criteria) is finished, explain technical details below everything else in here (pull request, code review, resolving user story with product owner), reviewing why a commitment could not be kept 
 
 \section{Continuous Integration}
-CI Process (figure of pipeline, start via pushing the changes to the git \cite{Git} repository, pull request with code review one other developer has to approve, restore, building of pushed branch through separate build servers, executing all unit tests if failure pull request will be rejected till next push), TFS (with repository, ui for ci pipeline), user acceptance test server for customer to test application before deployment to production occurs, dev server for developer to test released application, continous deployment not possible because of sharepoint (flo bzw. tobi fragen)
+In order to detect as many bugs as possible before merging the changes with the master branch of the code repository and maximizing the quality of the source code as well as the project structure, the development team has defined a CI process with specific rules for the project. These rules apply to handling the local cloned git repository and when changes to the source code are accepted for merging with the shared repository. Before starting the implementation of a user story, a feature branch must be created, because committing on the master branch is not possible and after merging the changes into the master branch, the respective branch is deleted. If the acceptance criteria of the user story are met, all changes to the source code must be pushed to the shared repository and a pull request must be created using the TFS user interface. The pull request is accepted if at least one other developer agrees, no comments on the source code are still marked as active, and the build process has been successfully completed. The review of the source code of the pull request is carried out by a code review with at least one other developer. If changes have to be made to the code after the code review, the pull request remains open. Only when all conditions have been fulfilled can the pull request be completed.
+\\[\baselineskip]
+The build process was designed utilizing the build definition user interface of the TFS. The only requirements for a build server for this procedure are that it has installed npm and has enough space to download and install the node modules. The following six tasks together make up the build process:
+\begin{itemize}
+\item "Get sources":
+\item "npm install":
+\item "npm build": 
+\item "npm test": 
+\item "Publish Test Results":
+\item "Publish Artifact: dist":
+\end{itemize}
+For this project, the first build process for an Angular project of the development team has been created, which in addition to building the application also runs the tests and then publishes the results. This was mostly because the build servers had problems launching a browser like Google Chrome however, a browser is needed to run the tests with Karma as the test runner. The solution to this problem was to use a headless browser \cite[p.~2]{HeadlessBrowser} for executing the tests. In contrast to browsers like Google Chrome \cite{Chrome} or Mozilla Firefox \cite{Firefox}, headless browsers are always executed in the background and do not have a graphical user interface. The communication with a headless browser thus only takes place via the console, which allows a build server to run it. The selected headless browser for this project was PhantomJS \cite{PhantomJS}, as two developers of the team had already gained experience with PhantomJS.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.5\linewidth]{PICs/karma_phantomjs.eps}
+\caption{The configuration to be inserted into the configuration file of Karma}\label{Fig2}
+\end{figure}
+For PhantomJS to be operated as a browser for the test task, the three npm packages: phantomjs-prebuilt, karma-phantomjs-launcher, and karma-junit-reporter must be included in the project and inserted into the karma configuration file as shown in the figure \ref{Fig2}. These packages install PhantomJs and two karma plugins, which allows Karma to run the tests inside of PhantomJS and create publishable reports of the results.
+\\[\baselineskip]
+(figure of pipeline, \cite{Git}, restore, building of pushed branch through separate build servers, executing all unit tests if failure pull request will be rejected till next push), user acceptance test server for customer to test application before deployment to production occurs, dev server for developer to test released application, continous deployment not possible because of sharepoint (flo bzw. tobi fragen)
 
 \section{Integrating Angular in SharePoint 2013}
 Microsoft Docs about the script editor webpart for the development process, real integration in sharepoint through a sharepoint feature,
@@ -205,7 +235,9 @@ Microsoft Docs about the script editor webpart for the development process, real
 \section{Software Architecture}
 
 \subsection{Software Components}
-alert, blog, core, entities, services, service entities, shared, containers, components, routing (router, guard); figure of project structure;
+created with angular-cli;
+figure of project structure;
+alert, blog, core, entities, services, service entities, shared, containers, components, routing (router, guard); 
 
 \subsection{Interfaces}
 pnpjs, "REST" API, JSOM, CSOM, own backend in sharepoint, figure about how the communication between angular and sharepoint looks like
@@ -216,13 +248,13 @@ SASS, BEM
 \section{Reactive Programming}
 
 \subsection{Libraries \& Development Tools}
-rxjs, easier use of the redux pattern, more features for reactive programming, chrome extension
+rxjs, easier use of the redux pattern through Unionize \cite{Unionize} (removing some boilerplate code for writing actions (unionize, ofType), reducers (Action.match) and effects(Actions.is.SpecificAction)) and Immer \cite{Immer} (removing some boilerplate code for writing reducers (produce)), more features for reactive programming, Redux DevTools \cite{ReduxDevTools} as browser extension by importing the store devtools of ngrx into the AppModule.
 
 \subsection{Adding a new Feature}
 explain implementation in form of an example like "showing blog entry", Store, Actions, State, Reducer, Selector, Effect, etc., 
 
 \subsection{Unit Testing}
-testing with reactive programming; karma;
+testing with reactive programming (reducer, effects (jasmine-marbles)); allgemein welche Technologien wurden genutzt: Karma \cite{Karma} (test runner; config for browser, reporters, frameworks, and more); Jasmine \cite{Jasmine} (behavior-driven development framework for testing); Karma-Mocha-Reporter \cite{KarmaMocha} (javascript test framework) and Karma-Jasmine-HTML-Reporter \cite{KarmaJasmineHTML} for reporting; Given-When-Then \cite{GivenWhenThen} format for structuring test cases; 
 
 \clearpage
 
@@ -230,7 +262,7 @@ testing with reactive programming; karma;
 \chapter{Discussion}
 
 \section{Development}
-Difficulties, possible overhead of Redux huge advantages at a cost (also extensions for chrome which makes debugging less painful)
+Difficulties (no need for PhantomJS anymore because of Chrome as headless browser), possible overhead of Redux huge advantages at a cost (also extensions for chrome which makes debugging less painful)
 
 \section{Results}
 presenting finished solution
