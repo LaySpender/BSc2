@@ -190,7 +190,7 @@ what is angular?, what is it for?, dependency injection, data binding, \cite[p.~
 general introduction (what is it, why should it be used), 
 
 \subsection{Components}
-general introduction (what is it, why should it be used), 
+general introduction (what is it, why should it be used, structured inside of a module), 
 
 \subsection{npm}
 general introduction (what is it, why should it be used), 
@@ -242,22 +242,44 @@ For this project, the first build process for an Angular project of the developm
 For PhantomJS to be operated as a browser for the test task, the three npm packages: phantomjs-prebuilt, karma-phantomjs-launcher, and karma-junit-reporter had to be included in the project and added to the karma configuration file as shown in the figure \ref{Fig3}. These packages install PhantomJs and two karma plugins, which allows Karma to run the tests inside of PhantomJS and create reports of the results which the TFS user interface can interpret and showcase. Additionally, a process variable with the value "C:/NPM/Modules/PhantomJS.cmd" had to be added to the build process, so that the respective agent finds the executable file of PhantomJS.
 
 \section{Integrating Angular in SharePoint 2013}
-Microsoft Docs about the script editor webpart for the development process, real integration in sharepoint through a sharepoint feature, feature receiver, at first a sharepoint blog site has to be created then the developed blog feature has to be activated, polyfills have to be imported so application also works on Internet Explorer
+In order to use Angular as the framework for developing the application, it was first necessary to find a way to host the application in SharePoint 2013. This problem was solved by injecting the compiled project files each inside of one HTML script tag into the script-editor-web-part of the landing page. For the value of the  HTML script tag's source attribute the path to the compiled files and for the value of the type attribute "text/javascript" was defined. As a result, when the page was loaded, the scripts were executed and thereby started the application. An advantage of this solution was that every developer could work locally on the blog application because the path to the compiled project files could also point to the output of the build process of the local server hosted by the Angular "ng serve"-command.
+\\[\baselineskip]
+However, one requirement of the development team was not having to think about the script editor web part of the blog application every time the project maintenance was released, which is why it was decided to develop a SharePoint feature \cite{SPFeature} and feature event receiver \cite{SPFeatureEventReceiver}. Furthermore a feature event receiver also solved the question how the data of the old blog application could be migrated automatically.
+\\[\baselineskip]
+A SharePoint feature, as the name suggests, offers further functionality and can be activated at any time by a user with high enough privileges. A feature event receiver waits until a feature related event shows up to respond to it. Such an event appears when activating, deactivating, installing or deleting a feature. One limitation that has been set up so that elements of the blog feature are not unnecessarily created on the entire system is that the developed feature can only be activated on pages where blogs have already been created. By activating the blog feature, the blog event receiver starts creating all the necessary elements and migrating the data from the old blog. The tasks of the blog event receiver are the following:
+production integration uses paths to files compiled with a production build
+feature receiver (migrates all configured settings, created content and subscribed alerts; ensures the creation of the page library, the landing page of the blog containing the script editor webpart to display the blog), 
+\begin{itemize}
+\item "MigrateBlog":
+\item "EnsurePageLib":
+\item "EnsureLandingPage":
+\item "EnsureCategoryListFields":
+\item "EnsureTagsList":
+\item "EnsureBlogListFields":
+\item "EnsureCategoryItemEventReceiver":
+\item "EnsureTagsItemEventReceiver":
+\item "ReorderFields":
+\item "EnsureAlertManagerGroup":
+\end{itemize}
+polyfills have to be imported so application also works on Internet Explorer
 
 \section{Software Architecture}
 
 \subsection{Software Components}
-created with angular-cli;
-figure of project structure;
-alert, blog ("blog-details"-guard überprüft nochmal ob ein User eingeloggt ist und berechtigt ist auf den Blog zuzugreifen bevor auf die Liste der Blogs weitergeleitet wird. jz sind wir in der applikation), core (grundgerüst der anwendung, über index.html direkt zur "app"-komponente welche dann wenn kein Fehler beim Laden des derzeitgen Users geworfen wird direkt mittels einer "router-outlet"-direktive auf den angegebenen Pfad weiterleitet. Wenn ein kein User eingeloggt ist oder dieser nicht berechtigt ist den Blog zu lesen wird eine Fehlerseite angezeigt und die jeweilige Fehlermeldung ausgegeben. wenn kein richtiger pfad dann auf "/blog" weitergeletitet, beim ansurfen ohne URL im Browser explizit angegeben zu haben wird auch auf "/blog" als Default verwiesen), entities, services, service entities, shared, containers, components, routing (router, guard); 
+created with angular-cli \cite{AngularCli};
+core (grundgerüst der anwendung), blog, alert, shared, entities, services,
+\\[\baselineskip]
+service entities, containers, components, routing (router, guard);
+\\[\baselineskip]
+(über index.html direkt zur "app"-komponente welche dann wenn kein Fehler beim Laden des derzeitgen Users geworfen wird direkt mittels einer "router-outlet"-direktive auf den angegebenen Pfad weiterleitet. Wenn ein kein User eingeloggt ist oder dieser nicht berechtigt ist den Blog zu lesen wird eine Fehlerseite angezeigt und die jeweilige Fehlermeldung ausgegeben. wenn kein richtiger pfad dann auf "/blog" weitergeletitet, beim ansurfen ohne URL im Browser explizit angegeben zu haben wird auch auf "/blog" als Default verwiesen), ("blog-details"-guard überprüft nochmal ob ein User eingeloggt ist und berechtigt ist auf den Blog zuzugreifen bevor auf die Liste der Blogs weitergeleitet wird. jz sind wir in der applikation)
 
 \subsection{Interfaces}
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=0.75\linewidth]{PICs/ngrx_redux_structure.eps}
-\caption{The Redux pattern in conjunction with NgRx}\label{Fig6}
-\end{figure}
-pnpjs, "REST" API, JSOM, CSOM, own backend in sharepoint, figure about how the communication between angular and sharepoint looks like, da mehrere Möglichkeiten mit was mit sharepoint kommuniziert wird könnte eine grafik mit all diesen Möglichkleiten erstellt werden
+Principally, the developed application needs to communicate with only one other system, which is SharePoint 2013, but with which SharePoint interface has to be spoken changes, depending on where the data is requested from and what the demanded data is.
+pnpjs \cite{Pnpjs} easier communication with SharePoint (requires a setup function to be executed in the "main.ts" file which defines all accepted headers of the requests and responses), 
+JSOM und CSOM "sp" \cite{PnpjsSp} the fluent api wenn pnpjs verwendet werden kann, 
+selbstgebautes Backend "REST" API mit Angulars "HttpClient",
+SharePointHttpClient wenn extra Authenfizierung benötigt ist um Daten zu beanspruchen,
+SharePoint Script On Demand
 
 \subsection{Styles}
 SCSS, BEM
@@ -283,6 +305,11 @@ Immer \cite{Immer} (removing some boilerplate code for writing reducers (produce
 more features for reactive programming, Redux DevTools \cite{ReduxDevTools} as browser extension by importing the store devtools of ngrx into the AppModule.
 
 \subsection{Adding a new Feature}
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.75\linewidth]{PICs/ngrx_redux_structure.eps}
+\caption{The Redux pattern in conjunction with NgRx}\label{Fig6}
+\end{figure}
 explain implementation in form of an example like "showing blog entry", Store, Actions, State, Reducer, Selector, Effect, etc., verweis auf \ref{Fig6}
 
 \subsection{Unit Testing}
