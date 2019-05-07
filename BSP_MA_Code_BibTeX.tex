@@ -65,9 +65,8 @@
 \usepackage{blindtext}
 \usepackage{parskip}
 \usepackage{epstopdf}
-
-\hyphenchar\font=\string"7F
-\hyphenation{TESTS-Name-Of-Browser-Version-Of-Browser-Name-Of-Operating-System-Version-Of-Operating-System-xml}
+\usepackage{url}
+\usepackage{breakurl}
 
 %
 % Einträge für Deckblatt, Kurzfassung, etc.
@@ -167,14 +166,14 @@ einiges an Forschung wurde schon betrieben und nach der Einführung von funciton
 (signals or behaviours: time changing values, treated as constraints of the language runtime, when an inconcistency of a signal or behaviour is detected a recalculation is triggered \cite[p.~797]{DebuggingRP} \cite[p.~3]{PositivEffectOfRP}, can either depend on other signals or vars, vars are reactive values like signals but without dependencies \cite[p.~2]{PositivEffectOfRP}), less error prone, easier to understand, still immature field -> lack of developer tools like debuggers \cite[p.~796]{DebuggingRP}
 
 \subsection{ReactiveX}
-general introduction (what is it \cite{ReactiveExtensions} (von Microsoft aber open source), why should it be used) \cite{ReactiveX}, bringing functional-reactive-programming-like reactivity (FRP-like reactivity), 
+general introduction (what is it \cite{ReactiveExtensions} \cite[p.~291]{RxAngular5Prj} (von Microsoft aber open source), why should it be used) \cite{ReactiveX}, bringing functional-reactive-programming-like reactivity (FRP-like reactivity \cite{PositivEffectOfRP}
 marble-diagrams
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.5\linewidth]{PICs/marble_diagram.eps}
 \caption{An example of a marble diagram, which is mostly used for explaining transformations of observables \cite{RxObservables}.}\label{Fig2}
 \end{figure}
-observables, observables background with reactor pattern \cite{RxObservables}
+observables, observables background with reactor pattern \cite{RxObservables} \cite[p.~292]{RxAngular5Prj} \cite[p.~310]{RxAngular5Prj}
 
 \subsection{Redux}
 general introduction (what is it, why should it be used), \cite{Redux}, motivation why redux \cite{ReduxIntroMoti}, core concept \cite{ReduxIntroCC}, three principles \cite{ReduxIntro3P}, figure for explanation
@@ -184,25 +183,25 @@ general introduction (what is it, why should it be used), \cite{Ngrx}, ng/store,
 
 
 \section{Angular}
-what is angular?, what is it for?, dependency injection, data binding, \cite[p.~]{YakovFainAngular}
+what is angular? what is it for? \cite[p.~xxiv-xxix]{RxAngular5Prj}, dependency injection \cite[p.~]{YakovFainAngular} \cite[p.~211]{RxAngular5Prj}, data binding, \cite[p.~]{YakovFainAngular}, bundeling code in modules \cite[p.~116]{RxAngular5Prj}
 
 \subsection{TypeScript}
-general introduction (what is it, why should it be used), 
+general introduction \cite[p.~19]{RxAngular5Prj} \cite{TypeScript} \cite[p.~41]{RxAngular5Prj} (what is it, why should it be used), 
 
 \subsection{Components}
-general introduction (what is it, why should it be used, structured inside of a module), 
+general introduction \cite[p.~22]{RxAngular5Prj} \cite[p.~89]{RxAngular5Prj} \cite[p.~159]{RxAngular5Prj} (what is it, why should it be used, structured inside of a module), 
 
 \subsection{npm}
-general introduction (what is it, why should it be used), 
+general introduction \cite[p.~71]{RxAngular5Prj} (what is it, why should it be used), 
 tool to install everything js based
 
 \subsection{Webpack}
-general introduction (what is it, why should it be used), 
+general introduction \cite[p.~113]{RxAngular5Prj} (what is it, why should it be used), 
 bundling assets (vendor, main, styles, etc.)
 
 \subsection{Babel}
 general introduction (what is it, why should it be used), 
-polyfills
+polyfills \cite[p.~18]{RxAngular5Prj}
 
 \clearpage 
 
@@ -229,7 +228,7 @@ The build pipeline was designed utilizing the build definition user interface of
 \item "npm install": This step executes the command "npm install" and thus installs all required dependencies of the application which are defined in the "package-lock.json" file \cite{NpmInstall}. In the configuration of the step, the folder in which the "package.json" is located was specified, as this allows the task to keep in mind the additional configurations for the particular command to be executed \cite{NpmTaskInstall}.
 \item "npm build": The use of this step is it to start a production build process. A custom command must be specified for this step because the build definition tool of the companies TFS did not support the command "npm run build" out of the box and furthermore additional arguments for the command had to be specified. The command that is executed is "npm run prod-build" which is an abbreviation for "ng build --prod --output-path='dist/blog-app'" defined in the "package.json" file. The argument "--prod" sets the production-flag to true and thereby executes a build which does not only employ bundeling and limited tree-shaking but also limited dead code elimination. The argument "--output-path" specifies the relative path to the folder where the compiled project will be moved \cite{AngularCliBuild}. As with the previous step, the folder in which the "package.json" file is located was specified \cite{NpmTaskCustom}.
 \item "npm test": In this step, the test process is initiated. For the same reason as with the "npm build" step a custom command has to be configured. The command specified here is "npm run test-headless" which in turn is a short for "ng test --watch=false --browsers=PhantomJS --reporters=progress,junit". The argument "--watch=false" ensures that the test process is terminated after a run. The other two arguments define which reporter or browser should be operated by karma \cite{KarmaConfig}. As a reporter Progress and JUnit \cite{JUnit} \cite{KarmaJUnitReporter} were chosen, because firstly the test results generated by the Progress reporter can be found in the console output of the build job in the TFS and secondly a more pleasant view of the test results is generated by the TFS in the next step by interpreting the XML output of the test results created by the JUnit reporter. The reason why PhantomJS \cite{PhantomJS} was chosen as the browser in which the tests are running will be explained in the next paragraphs. As with the other two steps before, the folder in which the "package.json" file is was specified again \cite{NpmTaskCustom}.
-\item "Publish Test Results": The test results created by the previous task are captured by this task and passed to the TFS in the correct format. The configuration of this build step consists of the respective format of the test results, the name of the file in which the test results are to be found and in which folder this file should be searched for. The name of the output file of the JUnit reporter is, unless the default configuration inside of the karma configuration file is changed, in the pattern "TESTS-Name-Of-Browser{\_}Version-Of-Browser{\_}(Name-Of-Operating-System{\_}Version-Of-Ope-\\rating-System).xml", therefore "TESTS-*.xml", where "*" serves as a wildcard, was set \cite{KarmaJUnitReporterConfig}. The default value "\$(System.DefaultWorkingDirectory)" for the search folder was retained because no changes were made to the configuration of the output folder of the JUnit Reporter \cite{TFSPublishBuildArtifact}.
+\item "Publish Test Results": The test results created by the previous task are captured by this task and passed to the TFS in the correct format. The configuration of this build step consists of the respective format of the test results, the name of the file in which the test results are to be found and in which folder this file should be searched for. The name of the output file of the JUnit reporter is, unless the default configuration inside of the karma configuration file is changed, in the pattern "TESTS-Name-Of-Browser{\_}Version-Of-Browser{\_}(Name-Of-Operating-System{\_}Version-Of-Operating-System).xml", therefore "TESTS-*.xml", where "*" serves as a wildcard, was set \cite{KarmaJUnitReporterConfig}. The default value "\$(System.DefaultWorkingDirectory)" for the search folder was retained because no changes were made to the configuration of the output folder of the JUnit Reporter \cite{TFSPublishBuildArtifact}.
 \item "Publish Artifact: dist": In the last step, the files created by the build task are issued as artifacts. For this, the path to the folder containing the compiled files and the name of the artifact had to be specified. The value for the path was the output folder specified in the "--output-path" argument of the "npm build" command. For the name of the artifact "drop" was selected because it was a rule of the development team for this project to call each build artifact "drop". An artifact created by this task could be downloaded to manually deploy on a SharePoint 2013 development server or User Acceptance Test Server for further testing by a developer, the product owner or the customer \cite{TFSPublishBuildArtifact}.
 \end{itemize}
 For this project, the first build process for an Angular project of the development team has been created, which in addition to building the application also runs the tests and then publishes the results. This was mostly because the build servers had problems launching a browser like Google Chrome \cite{Chrome} or Mozilla Firefox \cite{Firefox} however, a browser is needed to run the tests with Karma as the test runner. The solution to this problem was to use a headless browser \cite[p.~2]{HeadlessBrowser} for executing the tests. In contrast to browsers like Google Chrome or Mozilla Firefox, headless browsers are always executed in the background and do not have a graphical user interface. The communication with a headless browser thus only takes place via the console, which allows a build server to run it. The selected headless browser for this project was PhantomJS \cite{PhantomJS}, as two developers of the team had already gained experience with PhantomJS.
@@ -242,47 +241,57 @@ For this project, the first build process for an Angular project of the developm
 For PhantomJS to be operated as a browser for the test task, the three npm packages: phantomjs-prebuilt, karma-phantomjs-launcher, and karma-junit-reporter had to be included in the project and added to the karma configuration file as shown in the figure \ref{Fig3}. These packages install PhantomJs and two karma plugins, which allows Karma to run the tests inside of PhantomJS and create reports of the results which the TFS user interface can interpret and showcase. Additionally, a process variable with the value "C:/NPM/Modules/PhantomJS.cmd" had to be added to the build process, so that the respective agent finds the executable file of PhantomJS.
 
 \section{Integrating Angular in SharePoint 2013}
-In order to use Angular as the framework for developing the application, it was first necessary to find a way to host the application in SharePoint 2013. This problem was solved by injecting the compiled project files each inside of one HTML script tag into the script-editor-web-part of the landing page. For the value of the  HTML script tag's source attribute the path to the compiled files and for the value of the type attribute "text/javascript" was defined. As a result, when the page was loaded, the scripts were executed and thereby started the application. An advantage of this solution was that every developer could work locally on the blog application because the path to the compiled project files could also point to the output of the build process of the local server hosted by the Angular "ng serve"-command.
+In order to use Angular as the framework for developing the application, it was first necessary to find a way to host the application in SharePoint 2013. This problem was solved by injecting the compiled project files each inside of one HTML script tag into the script editor web part of the landing page. For the value of the  HTML script tag's source attribute the path to the compiled files and for the value of the type attribute "text/javascript" was defined. As a result, when the page was loaded, the scripts were executed and thereby started the application. An advantage of this solution was that every developer could work locally on the blog application because the path to the compiled project files could also point to the output of the build process of the local server hosted by the Angular "ng serve"-command.
 \\[\baselineskip]
 However, one requirement of the development team was not having to think about the script editor web part of the blog application every time the project maintenance was released, which is why it was decided to develop a SharePoint feature \cite{SPFeature} and feature event receiver \cite{SPFeatureEventReceiver}. Furthermore a feature event receiver also solved the question how the data of the old blog application could be migrated automatically.
 \\[\baselineskip]
-A SharePoint feature, as the name suggests, offers further functionality and can be activated at any time by a user with high enough privileges. A feature event receiver waits until a feature related event shows up to respond to it. Such an event appears when activating, deactivating, installing or deleting a feature. One limitation that has been set up so that elements of the blog feature are not unnecessarily created on the entire system is that the developed feature can only be activated on pages where blogs have already been created. By activating the blog feature, the blog event receiver starts creating all the necessary elements and migrating the data from the old blog. The tasks of the blog event receiver are the following:
-production integration uses paths to files compiled with a production build
-feature receiver (migrates all configured settings, created content and subscribed alerts; ensures the creation of the page library, the landing page of the blog containing the script editor webpart to display the blog), 
+A SharePoint feature, as the name suggests, offers further functionality and can be activated at any time by a user with high enough privileges. A feature event receiver waits until a feature related event shows up to respond to it. Such an event appears when activating, deactivating, installing or deleting a feature. One limitation that has been set up so that elements of the blog feature are not unnecessarily created on the entire system is that the developed feature can only be activated on pages where blogs have already been created. By activating the blog feature, the blog event receiver ensures the creation of all necessary elements and migrates the data from the old blog. The tasks of the blog event receiver are the following:
 \begin{itemize}
-\item "MigrateBlog":
-\item "EnsurePageLib":
-\item "EnsureLandingPage":
-\item "EnsureCategoryListFields":
-\item "EnsureTagsList":
-\item "EnsureBlogListFields":
-\item "EnsureCategoryItemEventReceiver":
-\item "EnsureTagsItemEventReceiver":
-\item "ReorderFields":
-\item "EnsureAlertManagerGroup":
+\item "MigrateBlog": Checks if an old blog is present and if so, the list of blogs and comments is copied to set the respective lists of the new blog application.
+\item "EnsurePageLib": Checks the existence of a SharePoint document library \cite{SPDocumentLibrary} on the page of the blog application, if it is not present, one is created. A document library manages files that can be shared among multiple users.
+\item "EnsureLandingPage": Checks by means of a configuration file if all necessary web parts of the page have been created, if not they will be created. This ensures the creation of the script editor web part and thereby configures the paths to the compiled project files. In addition, the welcome page in the root folder is set to "Beitraege.aspx".
+\item "EnsureCategoryListFields": Ask if a list of categories already exists otherwise a new one will be created. If a list already exists, an additional lookup field is defined and added as this is required for filtering the categories.
+\item "EnsureTagsList": Only ensures the creation of a list of tags.
+\item "EnsureBlogListFields": Checks if a list has been created for blogs, if not a list will be created. The default blog list will be expanded with fields as they are needed for the new functionality. These include tags, target audiences, content owners, and the time how long a blog post is in the global news section of the SharePoint.
+\item "EnsureCategoryItemEventReceiver": Checks the creation of the category item event receiver, if none exists one will be created and configured. This event receiver then ensures that when creating, updating or deleting a category, the category list of alerts is also taken into account.
+\item "EnsureTagsItemEventReceiver": Similar to above only this is the event receiver of the tag items.
+\item "ReorderFields": This adjusts the default arrangement of the fields in the blog list. The order of the fields not only plays a role when displaying the list but also when creating a new blog. This arrangement was a requirement of the customer.
+\item "EnsureAlertManagerGroup": Checks if an alert manager group has been created, if none exist, on will be created. An alert manager has the rights to subscribe to a blog, categories or tags on behalf of others.
 \end{itemize}
-polyfills have to be imported so application also works on Internet Explorer
+
+So that all functionalities of the SharePoint can be used the website must be started in an Internet Explorer \cite{IE}. Since this browser does not support all the features that Angular offers or requires for development, polyfills had to be integrated. Apart from the polyfill, which allows using "NgClass" on SVG elements, all polyfills recommended by angular-cli for the support of Internet Explorer 9-11 were imported. In addition, the "core-js/es7"-polyfill was imported, as it provided the "Array.prototype.includes()" feature of ECMAScript 2016, which increased the readability of some parts of the source code.
 
 \section{Software Architecture}
 
 \subsection{Software Components}
-created with angular-cli \cite{AngularCli};
-core (grundgerüst der anwendung), blog, alert, shared, entities, services,
+The basis for the Angular project was created by using Angular CLI's \cite{AngularCli} "ng new" command \cite{AngularCli}. When executing the command, interactive prompts ask as to whether a basis for the routing should be generated and which style sheet format should be utilized. The skeleton created by this command consists of a folder for end-to-end tests, one for the node modules and one for the source code. Furthermore, some configuration files for the project will be added.
 \\[\baselineskip]
-service entities, containers, components, routing (router, guard);
+When creating the project structure, the development team required to keep it as clear as possible and at the same time easily expandable. For this purpose, a module-oriented approach was employed. A module contains several components which together bring functionality. The components were split up into containers and components, partly because of the reactive programming approach but also to have a better overview. A component gets the required data inserted and does not request it.
 \\[\baselineskip]
-(über index.html direkt zur "app"-komponente welche dann wenn kein Fehler beim Laden des derzeitgen Users geworfen wird direkt mittels einer "router-outlet"-direktive auf den angegebenen Pfad weiterleitet. Wenn ein kein User eingeloggt ist oder dieser nicht berechtigt ist den Blog zu lesen wird eine Fehlerseite angezeigt und die jeweilige Fehlermeldung ausgegeben. wenn kein richtiger pfad dann auf "/blog" weitergeletitet, beim ansurfen ohne URL im Browser explizit angegeben zu haben wird auch auf "/blog" als Default verwiesen), ("blog-details"-guard überprüft nochmal ob ein User eingeloggt ist und berechtigt ist auf den Blog zuzugreifen bevor auf die Liste der Blogs weitergeleitet wird. jz sind wir in der applikation)
+Moreover, events such as the press of a button are not processed by the component but passed on to the container in which the components live. However, this does not mean that a component can not call other components. A container queries the required data by sending actions that first return an observable, which is then passed to a component via the async-pipe \cite{AngularAsyncPipe}. Each container and component has an HTML file for defining the structure of the data, an SCSS \cite{Sass} file for the design of the structure, and a TypeScript file, which takes care of the state of the data to be displayed.
+\\[\baselineskip]
+So that the actions, reducers, selectors, and effects of the application are also structured, these were housed in the respective modules in which they are called. For actions, reducer, and effects, a separate folder was established inside of the module just like for containers and components. Selectors were added to the folder of the reducers because they were in the beginning in the same file and the developer team did not want to separate them completely.
+\\[\baselineskip]
+In each module were in addition to a module configuration file, also a routing module and a guard \cite{AngularGuard}. In the routing module, was defined at which routes which component of the module should be called. Furthermore, several guards per route could be designated, which usually made sure that the logged in user has the privileges to access this data and whether the data still exists. If a guard rejects the navigation, the navigation to another page will be terminated, unless the guard returns a "UrlTree", then an attempt is made to navigate to that location.
+\\[\baselineskip]
+The application was divided into the modules blog, alert, core and shared, as well as the root reducer, which mainly took care of the router state, and the services, which were employed to request the required data. The core module is the entry point of the application and defines the error page as well as the logic for displaying errors and checking the current user. If no error is thrown when starting the application, the error page is not loaded, and a router outlet tries to navigate to the blog page. From then on, after a successful examination of the current user, the features of the blog and the alert module are available to the user. Since a handful of these features consist of components that are used both in the blog and in the alert module, these components became a part of the shared module.
 
 \subsection{Interfaces}
 Principally, the developed application needs to communicate with only one other system, which is SharePoint 2013, but with which SharePoint interface has to be spoken changes, depending on where the data is requested from and what the demanded data is.
-pnpjs \cite{Pnpjs} easier communication with SharePoint (requires a setup function to be executed in the "main.ts" file which defines all accepted headers of the requests and responses), 
-JSOM und CSOM "sp" \cite{PnpjsSp} the fluent api wenn pnpjs verwendet werden kann, 
-selbstgebautes Backend "REST" API mit Angulars "HttpClient",
-SharePointHttpClient wenn extra Authenfizierung benötigt ist um Daten zu beanspruchen,
-SharePoint Script On Demand
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.625\linewidth]{PICs/communication_sharepoint_services.eps}
+\caption{The different interfaces required to get all the data from SharePoint}\label{Fig7}
+\end{figure}
+pnpjs \cite{Pnpjs} easier communication with SharePoint (requires a setup function to be executed in the "main.ts" file which defines all accepted headers of the requests and responses), needs import '@pnp/polyfill-ie11'; polyfill
+anstatt JSOM \cite{JSOM}, CSOM \cite{CSOM} oder SharePoint REST API \cite{SPRest} => "sp" \cite{PnpjsSp} the fluent api wenn pnpjs verwendet werden kann, 
+selbstgebautes Backend "wcf data service" \cite{SPWcf} API mit Angulars "HttpClient",
+SharePointHttpClient wenn extra Authenfizierung benötigt ist um Daten zu beanspruchen \cite{SPRest},
+SharePoint Script On Demand \cite{SpSod}
+services, service entities mapping and entities
 
 \subsection{Styles}
-SCSS, BEM
+The creators of SASS describe it as CSS with superpowers \cite{Sass}, BEM \cite{BEM}, Bootstrap \cite{Bootstrap}
 
 \section{Reactive Programming}
 
@@ -343,18 +352,20 @@ presenting finished solution
 \listoffigures
 \clearpage
 
-\listofcode
-\clearpage
-
 \phantomsection
 \addcontentsline{toc}{chapter}{\listacroname}
 \chapter*{\listacroname}
 \begin{acronym}[XXXXX]
     \acro{API}[API]{Application Programming Interface}
+    \acro{BEM}[BEM]{Block Element Modifier}
     \acro{CLI}[CLI]{Command-Line Interface}
     \acro{CSS}[CSS]{Cascading Style Sheets}
     \acro{ECMA}[ECMA]{European Computer Manufacturers Association}
     \acro{HTML}[HTML]{Hypertext Markup Language}
+    \acro{REST}[REST]{Representational State Transfer}
+    \acro{SASS}[SASS]{Syntactically Awesome Style Sheets}
+    \acro{SCSS}[SCSS]{Sassy Cascading Style Sheets}
+    \acro{SVG}[SVG]{Scaleable Vector Graphics}
     \acro{TFS}[TFS]{Team Foundation Server}
     \acro{UI}[UI]{User Interface}
     \acro{XML}[XML]{Extensible Markup Language}
