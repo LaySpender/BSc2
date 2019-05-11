@@ -138,7 +138,15 @@
 
 \maketitle
 \chapter{Introduction}
-describe starting point, why will this project be realised, what should be achieved?, motivation, SharePoint \cite{SharePoint}, SharePoint Requirements (IE), Project Requirements (features), old solution, rebuilding with angular because of new features and same cost of developing a new application and not building on sharepoint feature (also extensibility, maintenance and encapsulation), better for company to have knowledge in Angular than in Sharepoint 2013 (because more projects also use angular), possible research questions: extensibility (1 of 4 team members have experience in developing sharepoint apps, 3 of 4 team members have experience in developing angular apps), maintenance?, observer patter in reactive programming?, overhead of redux?, war angular wirklich schneller zu entwickeln als sharepoint? (Vorteile: Angular wird häufig auch bei anderen Projekten verwendet, no publishing of whole sharepoint project through hosting angular app locally which saves time also angular supports hot reloading)
+describe starting point, 
+why will this project be realised, what should be achieved?, 
+motivation, 
+SharePoint \cite{SharePoint}, SharePoint Requirements (IE), Project Requirements (features), old solution (default blog feature mit einigen hacks damit es dem kunden gefällt), 
+rebuilding with angular because of new features and same cost of developing a new application and not building on sharepoint feature (also extensibility, maintenance and encapsulation can more easily be improved when starting at zero, goal is only depending on SharePoint because of Data), 
+better for company to have knowledge in Angular than in Sharepoint 2013 (because more projects also use angular),
+possible research questions: 
+extensibility [wird durch bauen in Angular statt SharePoint das erweitern der Anwendung um Features leichter] (1 of 4 team members have experience in developing sharepoint apps, 3 of 4 team members have experience in developing angular apps, only team with SharePoint Experience), 
+maintenance [kann ein Problem schneller gelöst werden dadurch das die Anwendung nicht in SharePoint gebaut wurde] (more developer teams can maintain code because no SharePoint knowledge is necessary),
 \clearpage
 
 
@@ -174,6 +182,7 @@ marble-diagrams
 \caption{An example of a marble diagram, which is mostly used for explaining transformations of observables \cite{RxObservables}.}\label{Fig2}
 \end{figure}
 observables, observables background with reactor pattern \cite{RxObservables} \cite[p.~292]{RxAngular5Prj} \cite[p.~310]{RxAngular5Prj}
+hot and cold \cite{RxObservables}
 
 \subsection{Redux}
 general introduction (what is it, why should it be used), \cite{Redux}, motivation why redux \cite{ReduxIntroMoti}, core concept \cite{ReduxIntroCC}, three principles \cite{ReduxIntro3P}, figure for explanation
@@ -209,7 +218,9 @@ polyfills \cite[p.~18]{RxAngular5Prj}
 The following sections deal with describing the processes utilized to ensure the quality of the final product both during the development phase and after completion. First, the general procedures related to project management and continuous integration are illustrated. Subsequently, the software architecture including the project structure, the interfaces and additionally added technologies as well as methodologies will be presented. Finally, the development with reactive programming is discussed.
 
 \section{Project Management}
-To successfully complete this project with as few errors as possible and to develop a product that adds business value to the customer and satisfies the customers' needs, the agile project management framework "Scrum" \cite{Scrum} was employed. The scrum team consisted of 3 developers, one of whom was one half of his time involved in scrum master activities, and one product owner. The product owner took care of analyzing the current problems together with the customer in order to develop a possible solution. Based on these requirements, a first version of the backlog was created to give the development team an overview of the product to be developed. Subsequently, the developer team estimated the story points of each user story using planning poker. With this information the product owner calculated the offer for the customer. After the contract was signed the scrum team met for a project kick-off meeting to discuss the highest priority user stories and refine the backlog for the first sprint.
+To successfully complete this project with as few errors as possible and to develop a product that adds business value to the customer and satisfies the customers' needs, the agile project management framework "Scrum" \cite{Scrum} was employed. 
+\\[\baselineskip]
+The scrum team consisted of 3 developers, one of whom was one half of his time involved in scrum master activities, and one product owner. The product owner took care of analyzing the current problems together with the customer in order to develop a possible solution. Based on these requirements, a first version of the backlog was created to give the development team an overview of the product to be developed. Subsequently, the developer team estimated the story points of each user story using planning poker. With this information the product owner calculated the offer for the customer. After the contract was signed the scrum team met for a project kick-off meeting to discuss the highest priority user stories and refine the backlog for the first sprint.
 \\[\baselineskip]
 The length of a sprint for this project was one week, since at first the user stories were small enough so that the commitment to the sprint goal could be kept. Later, the length of a sprint was increased to two weeks, because on the one hand some user stories were too large to finish in a week and on the other hand a developer had to be assigned to other projects for some time. Sprints were planned using the user-story- and task-board-backlog tools provided by the company's TFS (Team Foundation Server) \cite{TFS}. After each sprint a short retro was held on the day of the planning where the finished user stories and the problems encountered while implementing them were deliberated. In addition when it occurred that a commitment could not be kept, the reasons were sought to make adjustments to user stories that could be affected. 
 \\[\baselineskip]
@@ -276,11 +287,11 @@ Using the basic framework generated by Angular CLI as a basis, the development t
 \\[\baselineskip]
 A component gets the required data inserted and does not request anything from the store. Moreover, events such as the press of a button are not processed by the component but passed on to the container in which the components live. However, this does not mean that a component can not call other components. In contrast, a container queries the required data by sending actions that first return an observable, which is then passed to a component via the async-pipe \cite{AngularAsyncPipe}. Each container and component has an HTML file for defining the structure of the data, an SCSS \cite{Sass} file for the design of the structure, and a TypeScript file, which takes care of the state of the data to be displayed.
 \\[\baselineskip]
-So that the actions, reducers, selectors, and effects of the application are also structured, these were housed in the respective modules in which they are called. For actions, reducer, and effects, a separate folder was established inside of the module just like for containers and components. Selectors were added to the folder of the reducers because they were in the beginning in the same file and the developer team did not want to separate them completely.
+So that the actions, reducers, selectors, and effects of the application are also structured, these were housed in the respective modules in which they are called. For actions, reducer, and effects, a separate folder was established inside of the module just like for containers and components. Selectors were added to the folder of the reducers because they were in the beginning in the same file and the developer team did not want to separate them completely. In order for the entire process, which Redux and NgRx require, to function, the definitions of the reducers and states had to be passed to the "StoreModule". Because of this, an essential requirement was to develop a root reducer, which knew all reducers of the project. This way, all reducer, and state objects could be transferred to the NgRx "StoreModule" at once so that all containers could inject the store for dispatching actions and selecting the newest state.
 \\[\baselineskip]
 In each module were in addition to a module configuration file, also a routing module and a guard \cite{AngularGuard}. In the routing module, was defined at which routes which component of the module should be called. Furthermore, several guards per route could be designated, which usually made sure that the logged in user has the privileges to access this data and whether the data still exists. If a guard rejects the navigation, the navigation to another page will be terminated, unless the guard returns a "UrlTree", then an attempt is made to navigate to that location.
 \\[\baselineskip]
-The application was divided into the modules blog, alert, core and shared, as well as the root reducer, which mainly took care of the router state, and the services, which were employed to request the required data. The core module is the entry point of the application and defines the error page as well as the logic for displaying errors and checking the current user. If no error is thrown when starting the application, the error page is not loaded, and a router outlet tries to navigate to the blog page. From then on, after a successful examination of the current user, the features of the blog and the alert module are available to the user. Since a handful of these features consist of components that are used both in the blog and in the alert module, these components became a part of the shared module.
+The application was divided into the modules blog, alert, core and shared, as well as the root reducer, which mainly took care of all other reducers, and the services, which were employed to request the required data. The core module is the entry point of the application and defines the error page as well as the logic for displaying errors and checking the current user. If no error is thrown when starting the application, the error page is not loaded, and a router outlet tries to navigate to the blog page. From then on, after a successful examination of the current user, the features of the blog and the alert module are available to the user. Since a handful of these features consist of components that are used both in the blog and in the alert module, these components became a part of the shared module.
 
 
 \subsection{Interfaces}
@@ -331,6 +342,9 @@ In order for the structure of the SCSS files to be implemented uniformly, BEM wa
 
 
 \section{Reactive Programming}
+This section is intended to clarify the development process associated with using Reactive Programming in Angular.
+\\[\baselineskip]
+For this purpose, the libraries and tools employed for this project are outlined and shown how they contributed to a more pleasant and faster development phase. Furthermore, the steps employed for adding new features to the structure defined by Redux and NgRx will be showcased. The last chapter explains the procedure of creating unit tests for the project and what methods can be used to develop unit tests for reducer and effects.
 
 \subsection{Libraries \& Development Tools}
 rxjs,
@@ -351,15 +365,48 @@ Immer \cite{Immer} (removing some boilerplate code for writing reducers (produce
 more features for reactive programming, Redux DevTools \cite{ReduxDevTools} as browser extension by importing the store devtools of ngrx into the AppModule.
 
 \subsection{Adding a new Feature}
+Whenever a new feature had to be integrated into the application, the question arose whether the local state would be sufficient for the functionality that this component should provide. Although it was often sufficient to manage a local state, there were occasionally good reasons why the store should be utilized. One of these was when the new feature needed to query data from SharePoint for which no container or service already existed. If a local state were still managed, the component would have to speak directly to the service. This would then lead to the fact that when changes to the SharePoint or changes to the requirements happened not just the service but also the component would have to be adjusted. Besides, this approach would speak against the agreed software architecture, which was discussed in Chapter 3.4. This problem was avoided by decapsulating the component from the service using the Redux pattern, supported by NgRx. In order to use this pattern, a structure as shown in Figure \ref{Fig6} had to be established.
+\\[\baselineskip]
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.75\linewidth]{PICs/ngrx_redux_structure.eps}
 \caption{The Redux pattern in conjunction with NgRx}\label{Fig6}
 \end{figure}
-explain implementation in form of an example like "showing blog entry", Store, Actions, State, Reducer, Selector, Effect, etc., verweis auf \ref{Fig6}
+To clarify the structure of Figure \ref{Fig6} and the process behind adding a new feature, the implementation of the blog tools feature is described as an example. This feature consists of five links, as shown in Figure \ref{FigBlogDetail} on the left, that redirect to the blog management tools of the SharePoint. The reason why a local state should not be utilized here is that depending on the user's permissions different links have to be displayed. The following points describe what steps to take to integrate the blog tools feature into the Redux and NgRx structure:
+\begin{itemize}
+\item Create a container or component: At the beginning, the decision has to be made as to whether a suitable container already exists in which the blog tools component can be accommodated. Since the blog tools should be placed in the blog list page and the blog detail page, on the one hand, both containers would have to implement the same code so that the blog tools component gets the data it needs. That is why the blog tools themselves became a container.
+\item Defining actions: Actions have to be implemented in order to allow the blog tools to communicate with the store. Since the blog tools are part of the blog module, the new actions have to be added to the "BlogActionTypes". Since user permissions have to be requested from SharePoint, three actions have to be defined, one for triggering the query, one for SharePoint's successful response, and one for SharePoint's failed response. In this case, these are the "LoadBlogToolsPermissions", "LoadBlogToolsPermissionsSuccess" and "LoadBlogToolsPermissionsFail". Since the user permissions do not have to be changed, the payload of the "LoadBlogToolsPermissions" action should stay empty. The success action should define an object for their payload that can be utilized in the blog tools component for creating the view. In this case, the object consisted of five boolean values, which determined if a link should be displayed or not. The fail action should return the payload type "any" since in the effect the error objects will be wrapped with the fail action before emitting.
+\item Adapt state: For a reducer to be defined, the state must first be modified. In the state of the blog reducer, two properties have to be created. One holds the data returning from the effect, e.g. "blogToolsPermissions" and the other takes care of the loading state of the data, e.g. "BlogToolsPermissionLoadingState". The loading state simulates the loading of the data. As long as the loading state is set to "loading", a loading screen can be displayed, if the loading state changes to "loaded" or "failed", the application should react accordingly. Now the initial state has to be extended by the "blogToolsPermission" and the "blogToolsPermissionLoadingState" properties. The blog tools permission object is set to "null" and the loading state to "indeterminate".
+\item Add Reducer: Since one reducer takes care of one action, three reducers have to be created. The reducer listening to the load-blog-tools-permissions action sets the blog-tools-permission-loading-state property of the state to "loading". The reducer listening for the success action sets the loading state to "loaded" and populates the blog-tools-permission object with data. The reducer, who listens for the error action, sets the loading state to "failed".
+\item Create selector: In order for the container to be able to select the data, a selector must be defined for the blog-tools-permissions and the blog-tools-permissions-loading-state properties. For this purpose, two new variables are added to the blog selector file and defined by employing the "createSelector" method of NgRx. Thereby the store knows for which property of the state the respective variable is responsible.
+\item Create service and mapping: In order that the effect does not have to query the required data itself, a service should be built which provides methods to communicate with SharePoint. Since only the user permissions need to be requested for the blog tools feature, the service should only provide a GET method that queries the required data from SharePoint. Before the data is returned, a mapping to a blog-tools-permission object should take place.
+\item Define effect: In order for the user permission service to be triggered by actions, an effect must be defined by extending the blog effect class with a new property. This property must be marked with the "@Effect" decorator of NgRx to recognize it as an effect. In order for the effect to know to which action it should respond to, all actions that pop up should be checked if any of them matches the respective action. Depending on what needs to be implemented, it may happen that an effect still has to select data from the store or even request data form other services, but this is not the case with this effect. Therefore, the service is called immediately after filtering the appropriate action. Depending on whether the received response matches the expected data, a success or an error action will be emitted.
+\end{itemize}
 
 \subsection{Unit Testing}
-testing with reactive programming (reducer, effects (jasmine-marbles)); allgemein welche Technologien wurden genutzt: Karma \cite{Karma} (test runner; config for browser, reporters, frameworks, and more); Jasmine \cite{Jasmine} (behavior-driven development framework for testing); Karma-Mocha-Reporter \cite{KarmaMocha} (javascript test framework) and Karma-Jasmine-HTML-Reporter \cite{KarmaJasmineHTML} for reporting; Given-When-Then \cite{GivenWhenThen} format for structuring test cases; 
+In order to be able to react in the best possible way concerning changes in the requirements or additional orders of features, an attempt was made to cover most lines of code which concern the logic of the application with unit tests. Since refactoring already existing features or adding new features often causes bugs to creep into the application, a process similar to Test Driven Development (TDD) \cite{TDD} was adopted.
+\\[\baselineskip]
+This process demanded from the developer to create a unit test for the specific reducer at the exact time when the developer realized the component could only provide the functionality with a state managed inside of the store. If a service was responsible for obtaining the data and therefore an effect had to be implemented, a unit test for the effect had to be built as well. This process also made the learning curve of the Redux pattern flatter, or at least faster to learn, because forgetting one of the steps described in the previous chapter 3.5.2, lead to failing at least one unit test. This meant that one was constantly reminded of the Redux pattern. 
+\\[\baselineskip]
+Since the unit test is also created before the implementation of the reducer or the effect, the test thus always fails as long as no further implementation takes place. If one had to adhere strictly to TDD after the action had been defined, the action should immediately be implemented in the unit test. However,  the development team agreed that the unit test should not be fully implemented until after the state had been established or extended, and the logic of the reducer had been implemented.
+\\[\baselineskip]
+To make working with unit tests as comfortable as possible, the configuration of the Karma test runner \cite{Karma} generated by the Angular CLI was extended. The default test results reporter was removed, and the Karma-Mocha reporter \cite{KarmaMocha} and the Karma-Jasmine-Html \cite{KarmaJasmineHTML} reporter were included. The Karma-Mocha reporter explicitly printed out each unit test in the console in comparison to the default reporter, which only outputs the total number of successful test results. Another advantage is that if an error occurs during testing, the Karma-Mocha reporter still prints all the test results. Thus, where the problem is, can be narrowed down not only by the error message but also by the successful unit tests. Besides, the output is structured more clearly. The Karma-Jasmine-Html reporter was included for the same reasons, so each developer could decide for themselves which one to employ.
+\\[\baselineskip]
+Jasmine \cite{Jasmine} was utilized as the testing framework, as the team had already gained the most experience with it and it was possible to test effects when including another library. The format used to structure the unit tests was Given-When-Then \cite{GivenWhenThen}.
+\\[\baselineskip]
+For the unit tests of the reducer, an interface was created, which describes a test case. For each test case, the action, the name of the action, the name of the test, the current state, and the expected state had to be specified. Through this interface, it was possible to define all test cases as objects and to collect them in a list. Since the task of a reducer is only to change the state, a single unit test had to be written for all reducers, which saved much boilerplate code. Then, for each entry in the list, the single unit test, which checked whether the expected change of the state took place, was executed. 
+\\[\baselineskip]
+To test the effects with unit tests, a way had to be found how they could be called in a test. Effects need an action to trigger them and a service to get the data so that the effect can decide if a success action or fail action should be emitted. Hence, the first step was to create a setup method. All actions for the unit tests were made available utilizing the "provideMockActions" method of NgRx. Through the "TestBed" API of Angular, the effects and the services could be provided.
+\\[\baselineskip]
+A solution still had to be found to emit an action to trigger an effect. However, the developers of ReactiveX had already dealt with this topic and published a guide \cite{TestingMarbles}. The solution is to describe the mock observables through ASCII marble diagrams. An ASCII marble diagram might look like this: '-a-b-(cd)-|'. Each '-' sign stands for one frame of virtual time, the letters (could also be numbers) indicate that a value is emitted at this point, the brackets describe a point in time at which several values are emitted simultaneously, and the '|' sign means that the observable has been completed \cite{TestingMarblesSyntax}. An observable created with an ASCII marble diagram does not have to have a '|' character at the end. Doing so results in the observable never calling its "complete" method. A blank space inside of an ASCII marble diagram will be ignored and should be adopted to vertically align the statement \cite{TestingMarblesExamples} \cite{TestingMarblesSyntax}.
+\\[\baselineskip]
+An observable can also be created with an ASCII marble diagram, which only emits the next value after a long time. For example, the ASCII marble diagram 'a 9ms b' creates an observable which emits the value 'a' on frame 0 and the value 'b' on frame 10. When defining time units, it is necessary to add blank spaces between the characters since the ASCII marble diagram 'a9msb' would create an observable, which emits one frame after the other the values of 'a', '9', 'm', 's' and 'b'. In addition to ms (milliseconds), s (seconds) and m (minutes) are available as definable time units \cite{TestingMarblesTime}.
+\\[\baselineskip]
+ASCII marble diagrams also support "hot" and "cold" observables. In order for a "hot" observable to behave as if an observer subscribed to the observable, the '\string^' character can be used to identify the point in time at which the new observer has subscribed. A "hot" observable created by an ASCII marble diagram could look like this: '- a - \string^ - b'. A new Observer would, therefore, receive the value of 'b' but not the value of 'a' \cite{TestingMarblesSyntax}. A subscription marble diagram makes it possible to test if an observer unsubscribes from an observable. An example of a subscription marble diagram would be '- \string^ - - - ! -'. Here again, the character '\string^' specifies the beginning of the subscription and the character '!' describes the point in time where an observer terminates the subscription \cite{TestingMarblesSubscribe}. This also allows asserting whether an observer received the values that the observable emitted while the subscription was still active. For example, with an observable 'a b c' and a subscription marble diagram '- \string ^ - !', an observer would only get the value of 'b' because the value of 'a' was emitted before the observer was subscribed and the value of 'c' could no longer be received because at the same moment the subscription was terminated \cite{TestingMarblesSubExamples} \cite{TestingMarblesSubscribe}.
+\\[\baselineskip]
+By incorporating the Jasmine-Marbles library \cite{TestingMarbles}, which provides the functionality described above, the actions could be emitted through an observable to trigger an effect. Also, the respective service had to be mocked through the "spyOn" method of jasmine.
+\\[\baselineskip]
+Furthermore, a "cold" observable was created to define the expected value of the effect. Since the effects always emitted only either a success action or a fail action, the expected observable was defined with the ASCII marble diagram '--s'. The value of 's' was either the success action or the fail action. In order to finally compare the expected observable with the respective effect, the methods "expect(effect).toBeObservable(expected)" were employed.
 
 \clearpage
 
@@ -374,7 +421,9 @@ bessere erweiterbarkeit und höhere software qualität durch "Software Component
 SharePoint HTTP client could not be injected, 
 erweitern um eine base.scss welches variablen definiert damit definition an einem ort ist
 use @extend of sass to stay DRY
-possible overhead of Redux huge advantages at a cost (also extensions for chrome which makes debugging less painful), 
+logging einbauen um wartbarkeit zu verbessern
+possible overhead of Redux huge advantages at a cost (also extensions for chrome which makes debugging less painful),
+war angular wirklich schneller zu entwickeln als sharepoint? (Vorteile: Angular wird häufig auch bei anderen Projekten verwendet, no publishing of whole sharepoint project through hosting angular app locally which saves time also angular supports hot reloading)
 
 \section{Results}
 presenting finished solution
@@ -402,7 +451,9 @@ presenting finished solution
 
 
 \chapter{Conclusion \& Future Work}
-
+Angular and RP works great together;
+falls SharePoint für etwas anderes ersetzt werden soll müssten nur neue services für die neue API erstellt werden;
+Other Developer teams can also work on maintenance tasks because knowledge about SharePoint is not really necessary, which was not possible before,
 
 
 
@@ -421,6 +472,7 @@ presenting finished solution
 \chapter*{\listacroname}
 \begin{acronym}[XXXXX]
     \acro{API}[API]{Application Programming Interface}
+    \acro{ASCII}[ASCII]{American Standard Code for Information Interchange}
     \acro{BEM}[BEM]{Block Element Modifier}
     \acro{CLI}[CLI]{Command-Line Interface}
     \acro{CSS}[CSS]{Cascading Style Sheets}
@@ -432,6 +484,7 @@ presenting finished solution
     \acro{SASS}[SASS]{Syntactically Awesome Style Sheets}
     \acro{SCSS}[SCSS]{Sassy Cascading Style Sheets}
     \acro{SVG}[SVG]{Scaleable Vector Graphics}
+    \acro{TDD}[TDD]{Test Driven Development}
     \acro{TFS}[TFS]{Team Foundation Server}
     \acro{XML}[XML]{Extensible Markup Language}
 \end{acronym}
