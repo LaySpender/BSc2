@@ -138,15 +138,32 @@
 
 \maketitle
 \chapter{Introduction}
-describe starting point, 
-why will this project be realised, what should be achieved?, 
-motivation, 
-SharePoint \cite{SharePoint}, SharePoint Requirements (IE), Project Requirements (features), old solution (default blog feature mit einigen hacks damit es dem kunden gefällt), 
-rebuilding with angular because of new features and same cost of developing a new application and not building on sharepoint feature (also extensibility, maintenance and encapsulation can more easily be improved when starting at zero, goal is only depending on SharePoint because of Data), 
-better for company to have knowledge in Angular than in Sharepoint 2013 (because more projects also use angular),
-possible research questions: 
-extensibility [wird durch bauen in Angular statt SharePoint das erweitern der Anwendung um Features leichter] (1 of 4 team members have experience in developing sharepoint apps, 3 of 4 team members have experience in developing angular apps, only team with SharePoint Experience), 
-maintenance [kann ein Problem schneller gelöst werden dadurch das die Anwendung nicht in SharePoint gebaut wurde] (more developer teams can maintain code because no SharePoint knowledge is necessary),
+SharePoint \cite{SharePoint} is an application developed by Microsoft that supports team collaboration by sharing information, accessible through a browser, in the form of files and sites on specific topics in an intranet. SharePoint Server 2013 is one of several versions of SharePoint. Currently, the latest Version is SharePoint Server 2019 \cite{SharePoint}. One of the reasons why more than 200,000 organizations worldwide utilize SharePoint is the ability to customize each tool, library, and control it consist of \cite{SharePoint} \cite{SharePointDevRef}.
+\\[\baselineskip]
+This work is part of a company project to extend the SharePoint Blog feature. The extension of this feature was ordered by a customer whose company uses SharePoint Server 2013 as a solution for their intranet. This SharePoint was configured in 2015 as part of a project commissioned by the customer. Some of the default features of SharePoint were adapted to the customer's needs, and new features were developed as well. Over time, individual features have been modified and new ones have been added. However, none of the other changes have been as extensive as the requirements for the new blog feature. The following were the demanded features: 
+\begin{itemize}
+\item The design of the default blog site should be redesigned.
+\item Blog posts should be able to be labeled with tags. 
+\item Filtering of blog entries depending on categories and tags should be added.
+\item User should be able to subscribe to tags and categories. 
+\item The role alert manager should be added.
+\item An alert manager should be able to subscribe other users to tags or categories.
+\item The automatically generated sidebar from SharePoint should be hidden. 
+\item Pagination should be added.
+\item Pagination should be configurable for each blog site.
+\item Features should be hidden or displayed depending on user rights.
+\end{itemize}
+
+According to an estimate of the cost of all features, the three-person development team would be busy working on this project for several weeks. However, instead of continuing to build on the legacy SharePoint project, the idea was to rebuild the default SharePoint blog feature with the desired extensions in Angular with the latest state of the art practices and then integrate the application in SharePoint. One reason why this approach was chosen was that the estimated effort of such an Angular application stayed within reason of the ordered project. Another reason was that extending the functionality of SharePoint's default features sometimes had to be resolved by injecting JavaScript code, which leads to a chaotic project structure. The last reason was that only one developer of the company knew how to find all the necessary files to maintain the old SharePoint project properly.
+\\[\baselineskip]
+This thesis aims to describe the development phase of this project. Thereby, the best practice methods employed in organizing the project, planning the software architecture and developing the application will be discussed. In addition, the effectiveness of quality assurance through repetitive processes such as code reviews, pull requests, and Test Driven Development will be addressed. All of the methods mentioned above were adopted in the development of this application because the goal was to develop software that could be extended much more straightforward with new features and needed less effort and time to maintain than the old SharePoint project.
+\\[\baselineskip]
+Therefore the following research questions are the focus of this work:
+\begin{itemize}
+\item Which changes have to be made in the project so that the application or already existing components can be extended in functionality?
+\item Is the blog feature more maintainable because it was implemented in a new project instead of the old SharePoint project?
+\end{itemize}
+
 \clearpage
 
 
@@ -193,9 +210,10 @@ general introduction (what is it, why should it be used), \cite{Ngrx}, ng/store,
 
 \section{Angular}
 what is angular? what is it for? \cite[p.~xxiv-xxix]{RxAngular5Prj}, dependency injection \cite[p.~]{YakovFainAngular} \cite[p.~211]{RxAngular5Prj}, data binding, \cite[p.~]{YakovFainAngular}, bundeling code in modules \cite[p.~116]{RxAngular5Prj}
+polyfills \cite[p.~18]{RxAngular5Prj}
 
 \subsection{TypeScript}
-general introduction \cite[p.~19]{RxAngular5Prj} \cite{TypeScript} \cite[p.~41]{RxAngular5Prj} (what is it, why should it be used), 
+general introduction \cite[p.~19]{RxAngular5Prj} \cite{TypeScript} \cite[p.~41]{RxAngular5Prj} (what is it, why should it be used),
 
 \subsection{Components}
 general introduction \cite[p.~22]{RxAngular5Prj} \cite[p.~89]{RxAngular5Prj} \cite[p.~159]{RxAngular5Prj} (what is it, why should it be used, structured inside of a module), 
@@ -203,14 +221,6 @@ general introduction \cite[p.~22]{RxAngular5Prj} \cite[p.~89]{RxAngular5Prj} \ci
 \subsection{npm}
 general introduction \cite[p.~71]{RxAngular5Prj} (what is it, why should it be used), 
 tool to install everything js based
-
-\subsection{Webpack}
-general introduction \cite[p.~113]{RxAngular5Prj} (what is it, why should it be used), 
-bundling assets (vendor, main, styles, etc.)
-
-\subsection{Babel}
-general introduction (what is it, why should it be used), 
-polyfills \cite[p.~18]{RxAngular5Prj}
 
 \clearpage 
 
@@ -220,7 +230,7 @@ The following sections deal with describing the processes utilized to ensure the
 \section{Project Management}
 To successfully complete this project with as few errors as possible and to develop a product that adds business value to the customer and satisfies the customers' needs, the agile project management framework "Scrum" \cite{Scrum} was employed. 
 \\[\baselineskip]
-The scrum team consisted of 3 developers, one of whom was one half of his time involved in scrum master activities, and one product owner. The product owner took care of analyzing the current problems together with the customer in order to develop a possible solution. Based on these requirements, a first version of the backlog was created to give the development team an overview of the product to be developed. Subsequently, the developer team estimated the story points of each user story using planning poker. With this information the product owner calculated the offer for the customer. After the contract was signed the scrum team met for a project kick-off meeting to discuss the highest priority user stories and refine the backlog for the first sprint.
+The scrum team consisted of three developers, one of whom was one half of his time involved in scrum master activities, and one product owner. The product owner took care of analyzing the current problems together with the customer in order to develop a possible solution. Based on these requirements, a first version of the backlog was created to give the development team an overview of the product to be developed. Subsequently, the developer team estimated the story points of each user story using planning poker. With this information the product owner calculated the offer for the customer. After the contract was signed the scrum team met for a project kick-off meeting to discuss the highest priority user stories and refine the backlog for the first sprint.
 \\[\baselineskip]
 The length of a sprint for this project was one week, since at first the user stories were small enough so that the commitment to the sprint goal could be kept. Later, the length of a sprint was increased to two weeks, because on the one hand some user stories were too large to finish in a week and on the other hand a developer had to be assigned to other projects for some time. Sprints were planned using the user-story- and task-board-backlog tools provided by the company's TFS (Team Foundation Server) \cite{TFS}. After each sprint a short retro was held on the day of the planning where the finished user stories and the problems encountered while implementing them were deliberated. In addition when it occurred that a commitment could not be kept, the reasons were sought to make adjustments to user stories that could be affected. 
 \\[\baselineskip]
@@ -231,7 +241,7 @@ If all tasks of a user story were implemented and thus also fulfilled all accept
 \section{Continuous Integration}
 In order to detect as many bugs as possible before merging the changes with the master branch of the git \cite{Git} repository and maximizing the quality of the source code as well as the project structure, the development team defined a CI process with specific rules for the project. These rules applied to handling the local cloned git repository and when changes to the source code were accepted for merging with the shared repository. 
 \\[\baselineskip]
-Before starting the implementation of a user story, a feature branch had to be created, because committing on the master branch was not possible due to constraints and after merging the changes into the master branch, the respective branch had to be deleted. If the acceptance criteria of the user story were met, all changes to the source code had to be pushed to the shared repository and a pull request had to be created using the TFS user interface. The pull request was accepted if at least one other developer agreed, no comments on the source code were still marked as active, and the, on creation of the pull request automatically triggered, build process had been successfully completed. The review of the source code of the pull request was carried out by a code review with at least one other developer. If changes had to be made to the code after the code review, the pull request remained open. Only when all conditions had been fulfilled the pull request was completed.
+Before starting the implementation of a user story, a feature branch had to be created, because committing on the master branch was not possible due to constraints and after merging the changes into the master branch, the respective branch had to be deleted. If the acceptance criteria of the user story were met, all changes to the source code had to be pushed to the shared repository and a pull request had to be created using the TFS user interface. The pull request was accepted if at least one other developer agreed, no comments on the source code were still marked as active, and the, on creation of the pull request automatically triggered, build process was successfully completed. The review of the source code of the pull request was carried out by a code review with at least one other developer. If changes had to be made to the code after the code review, the pull request remained open. Only when all conditions were fulfilled the pull request was completed.
 \\[\baselineskip]
 The build pipeline was designed utilizing the build definition user interface of the TFS \cite{TFSBuildPipeline} . The requirements for a build server for this procedure are that it has npm installed and has enough space to download and install the node modules. The build process consists of six tasks which are the following:
 \begin{itemize}
@@ -254,9 +264,9 @@ For PhantomJS to be operated as a browser for the test task, the three npm packa
 
 
 \section{Integrating Angular in SharePoint 2013}
-In order to use Angular as the framework for developing the application, it was first necessary to find a way to host the application in SharePoint 2013. This problem was solved by injecting the compiled project files each inside of one HTML script tag into the script editor web part of the landing page. For the value of the  HTML script tag's source attribute the path to the compiled files and for the value of the type attribute "text/javascript" was defined. As a result, when the page was loaded, the scripts were executed and thereby started the application. An advantage of this solution was that every developer could work locally on the blog application because the path to the compiled project files could also point to the output of the build process of the local server hosted by the Angular "ng serve"-command.
+In order to use Angular as the framework for developing the application, it was first necessary to find a way to host the application in SharePoint 2013. This problem was solved by injecting the compiled project files each inside of one HTML script tag into the script editor web part of the landing page. For the value of the HTML script tag's source attribute the path to the compiled files and for the value of the type attribute "text/javascript" was defined. As a result, when the page was loaded, the scripts were executed and thereby started the application. An advantage of this solution was that every developer could work locally on the blog application because the path to the compiled project files could also point to the output of the build process of the local server hosted by the Angular "ng serve"-command.
 \\[\baselineskip]
-However, one requirement of the development team was not having to think about the script editor web part of the blog application every time the project maintenance was released, which is why it was decided to develop a SharePoint feature \cite{SPFeature} and feature event receiver \cite{SPFeatureEventReceiver}. Furthermore a feature event receiver also solved the question how the data of the old blog application could be migrated automatically.
+However, one requirement of the development team was not having to think about the script editor web part of the blog application every time the project was released, which is why it was decided to develop a SharePoint feature \cite{SPFeature} and feature event receiver \cite{SPFeatureEventReceiver}. Furthermore a feature event receiver also solved the question how the data of the old blog application could be migrated automatically.
 \\[\baselineskip]
 A SharePoint feature, as the name suggests, offers further functionality and can be activated at any time by a user with high enough privileges. A feature event receiver waits until a feature related event shows up to respond to it. Such an event appears when activating, deactivating, installing or deleting a feature. One limitation that has been set up so that elements of the blog feature are not unnecessarily created on the entire system is that the developed feature can only be activated on pages where blogs have already been created. By activating the blog feature, the blog event receiver ensures the creation of all necessary elements and migrates the data from the old blog. The tasks of the blog event receiver are the following:
 \begin{itemize}
@@ -278,7 +288,7 @@ So that all functionalities of the SharePoint can be used the website must be st
 \section{Software Architecture}
 This section deals with the software architecture of the application. Attention is focused on how the application was built, why these decisions were made and what was gained thereby.
 \\[\baselineskip]
-The first chapter describes the software components which together form the structure of the project. The following section describes the different interfaces the application needs to communicate with thus the services of the application can query the required data. Finally, how the development of the design of the application has taken place will be discussed. Special attention is given to structuring and avoiding unnecessary boilerplate code.
+The first chapter describes the software components which together form the structure of the project. The following section describes the different interfaces the application needs to communicate with to gain the required data from SharePoint. Finally, how the development of the design of the application has taken place will be discussed. Special attention is given to structuring and avoiding unnecessary boilerplate code.
 
 \subsection{Software Components}
 The basis for the Angular project was created by using Angular CLI's \cite{AngularCli} "ng new" command \cite{AngularCli}. When executing the command, interactive prompts ask as to whether a basis for the routing should be generated and which style sheet format should be utilized. The structure created by this command consists of a folder for end-to-end tests, one for the node modules and one for the source code. Furthermore, some configuration files for the project will be added.
@@ -295,11 +305,11 @@ The application was divided into the modules blog, alert, core and shared, as we
 
 
 \subsection{Interfaces}
-Principally, the developed application needs to communicate with only one other system, which is SharePoint 2013, but with which SharePoint interface has to be spoken changes, depending on where the data is requested from and what the demanded data is. As a result, the technologies that could be utilized to implement a service with change. The different interfaces are, as shown in Figure \ref{Fig7}, the Windows Communication Foundation (WCF) Data Service \cite{SPWcf}, the SharePoint REST API \cite{SPRest}, the People API Service, and the SharePoint File System.
+Technically, the developed application needs to communicate with only one other system, which is SharePoint 2013, but with which SharePoint interface has to be spoken changes, depending on where the data is requested from and what the demanded data is. As a result, the technologies that could be utilized to implement a service with change. The different interfaces are, as shown in Figure \ref{Fig7}, the Windows Communication Foundation (WCF) Data Service \cite{SPWcf}, the SharePoint REST API \cite{SPRest}, the People API Service, and the SharePoint File System.
 \\[\baselineskip]
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.625\linewidth]{PICs/communication_sharepoint_services.eps}
+\includegraphics[width=0.85\linewidth]{PICs/communication_sharepoint_services.eps}
 \caption{The different interfaces required to get all the data from SharePoint}\label{Fig7}
 \end{figure}
 
@@ -362,19 +372,19 @@ easier use of the redux pattern through Unionize \cite{Unionize} (removing some 
 \caption{"BlogReducer" implemented without (left) and with the use of the methods "produce" and "match" from the JavaScript library Immer \cite{Immer} and the TypeScript library Unionize \cite{Unionize} (right).}\label{Fig5}
 \end{figure}
 Immer \cite{Immer} (removing some boilerplate code for writing reducers (produce)).
-more features for reactive programming, Redux DevTools \cite{ReduxDevTools} as browser extension by importing the store devtools of ngrx into the AppModule.
+more features for reactive programming, Redux DevTools \cite{ReduxDevTools} as browser extension allowing time-travel debugging by importing the store devtools of ngrx into the AppModule.
 
 \subsection{Adding a new Feature}
 Whenever a new feature had to be integrated into the application, the question arose whether the local state would be sufficient for the functionality that this component should provide. Although it was often sufficient to manage a local state, there were occasionally good reasons why the store should be utilized. One of these was when the new feature needed to query data from SharePoint for which no container or service already existed. If a local state were still managed, the component would have to speak directly to the service. This would then lead to the fact that when changes to the SharePoint or changes to the requirements happened not just the service but also the component would have to be adjusted. Besides, this approach would speak against the agreed software architecture, which was discussed in Chapter 3.4. This problem was avoided by decapsulating the component from the service using the Redux pattern, supported by NgRx. In order to use this pattern, a structure as shown in Figure \ref{Fig6} had to be established.
 \\[\baselineskip]
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.75\linewidth]{PICs/ngrx_redux_structure.eps}
+\includegraphics[width=0.85\linewidth]{PICs/ngrx_redux_structure.eps}
 \caption{The Redux pattern in conjunction with NgRx}\label{Fig6}
 \end{figure}
 To clarify the structure of Figure \ref{Fig6} and the process behind adding a new feature, the implementation of the blog tools feature is described as an example. This feature consists of five links, as shown in Figure \ref{FigBlogDetail} on the left, that redirect to the blog management tools of the SharePoint. The reason why a local state should not be utilized here is that depending on the user's permissions different links have to be displayed. The following points describe what steps to take to integrate the blog tools feature into the Redux and NgRx structure:
 \begin{itemize}
-\item Create a container or component: At the beginning, the decision has to be made as to whether a suitable container already exists in which the blog tools component can be accommodated. Since the blog tools should be placed in the blog list page and the blog detail page, on the one hand, both containers would have to implement the same code so that the blog tools component gets the data it needs. That is why the blog tools themselves became a container.
+\item Create a container or component: At the beginning, the decision has to be made as to whether a suitable container already exists in which the blog tools component can be accommodated. Since the blog tools should be placed in the blog list page and the blog detail page both containers would have to implement the same code so that the blog tools component gets the data it needs. In order to implement requesting the data from the store only once, the blog tools feature has become a separate container.
 \item Defining actions: Actions have to be implemented in order to allow the blog tools to communicate with the store. Since the blog tools are part of the blog module, the new actions have to be added to the "BlogActionTypes". Since user permissions have to be requested from SharePoint, three actions have to be defined, one for triggering the query, one for SharePoint's successful response, and one for SharePoint's failed response. In this case, these are the "LoadBlogToolsPermissions", "LoadBlogToolsPermissionsSuccess" and "LoadBlogToolsPermissionsFail". Since the user permissions do not have to be changed, the payload of the "LoadBlogToolsPermissions" action should stay empty. The success action should define an object for their payload that can be utilized in the blog tools component for creating the view. In this case, the object consisted of five boolean values, which determined if a link should be displayed or not. The fail action should return the payload type "any" since in the effect the error objects will be wrapped with the fail action before emitting.
 \item Adapt state: For a reducer to be defined, the state must first be modified. In the state of the blog reducer, two properties have to be created. One holds the data returning from the effect, e.g. "blogToolsPermissions" and the other takes care of the loading state of the data, e.g. "BlogToolsPermissionLoadingState". The loading state simulates the loading of the data. As long as the loading state is set to "loading", a loading screen can be displayed, if the loading state changes to "loaded" or "failed", the application should react accordingly. Now the initial state has to be extended by the "blogToolsPermission" and the "blogToolsPermissionLoadingState" properties. The blog tools permission object is set to "null" and the loading state to "indeterminate".
 \item Add Reducer: Since one reducer takes care of one action, three reducers have to be created. The reducer listening to the load-blog-tools-permissions action sets the blog-tools-permission-loading-state property of the state to "loading". The reducer listening for the success action sets the loading state to "loaded" and populates the blog-tools-permission object with data. The reducer, who listens for the error action, sets the loading state to "failed".
@@ -388,7 +398,7 @@ In order to be able to react in the best possible way concerning changes in the 
 \\[\baselineskip]
 This process demanded from the developer to create a unit test for the specific reducer at the exact time when the developer realized the component could only provide the functionality with a state managed inside of the store. If a service was responsible for obtaining the data and therefore an effect had to be implemented, a unit test for the effect had to be built as well. This process also made the learning curve of the Redux pattern flatter, or at least faster to learn, because forgetting one of the steps described in the previous chapter 3.5.2, lead to failing at least one unit test. This meant that one was constantly reminded of the Redux pattern. 
 \\[\baselineskip]
-Since the unit test is also created before the implementation of the reducer or the effect, the test thus always fails as long as no further implementation takes place. If one had to adhere strictly to TDD after the action had been defined, the action should immediately be implemented in the unit test. However,  the development team agreed that the unit test should not be fully implemented until after the state had been established or extended, and the logic of the reducer had been implemented.
+Since the unit test is also created before the implementation of the reducer or the effect, the test thus always fails as long as no further implementation takes place. If one had to adhere strictly to TDD after the actions have been defined, the action should immediately be implemented in the unit test. However, the development team agreed that the unit test should not be fully implemented until after the state was established or extended, and the logic of the reducer was implemented.
 \\[\baselineskip]
 To make working with unit tests as comfortable as possible, the configuration of the Karma test runner \cite{Karma} generated by the Angular CLI was extended. The default test results reporter was removed, and the Karma-Mocha reporter \cite{KarmaMocha} and the Karma-Jasmine-Html \cite{KarmaJasmineHTML} reporter were included. The Karma-Mocha reporter explicitly printed out each unit test in the console in comparison to the default reporter, which only outputs the total number of successful test results. Another advantage is that if an error occurs during testing, the Karma-Mocha reporter still prints all the test results. Thus, where the problem is, can be narrowed down not only by the error message but also by the successful unit tests. Besides, the output is structured more clearly. The Karma-Jasmine-Html reporter was included for the same reasons, so each developer could decide for themselves which one to employ.
 \\[\baselineskip]
@@ -412,18 +422,26 @@ Furthermore, a "cold" observable was created to define the expected value of the
 
 
 \chapter{Discussion}
+The following sections address the implementation difficulties, discuss the methods used to develop the project, and present the final product.
 
 \section{Development}
-auch über beantwortung der forschungsfragen schreiben, 
-roter faden soll hier gesponnen werden also von dem 3. Kaptiel aufzählen warum man darüber geschrieben hat
-Difficulties (no need for PhantomJS anymore because of Chrome as headless browser), 
-bessere erweiterbarkeit und höhere software qualität durch "Software Components", 
-SharePoint HTTP client could not be injected, 
-erweitern um eine base.scss welches variablen definiert damit definition an einem ort ist
-use @extend of sass to stay DRY
-logging einbauen um wartbarkeit zu verbessern
-possible overhead of Redux huge advantages at a cost (also extensions for chrome which makes debugging less painful),
-war angular wirklich schneller zu entwickeln als sharepoint? (Vorteile: Angular wird häufig auch bei anderen Projekten verwendet, no publishing of whole sharepoint project through hosting angular app locally which saves time also angular supports hot reloading)
+The development time of this project was initially almost equated with the expansion of the old project. However, instead of the estimated 358 hours, a total of 434 hours were worked on the Angular project. This 76-hour difference may be due to the initial steep learning curve of reactive programming, and Redux combined with Angular. Since 2 of 3 developers had no experience with reactive programming or the Redux pattern before the project.
+\\[\baselineskip]
+In addition, the implementation of the services was underestimated. One of the reasons for this was because the developer team initially thought the SharePoint REST API supported fetching all the data stored in SharePoint. However, as described in chapter 3.4.2, several solutions had to be developed to get all the required data from SharePoint. Especially, a lot of time was lost in developing the alert WCF Data Services. The task was estimated to take 13 hours but ended up taking 27.66 hours.
+\\[\baselineskip]
+The Redux pattern in combination with NgRx initially caused confusion because the different components (action, reducer, state, selector, effect, service) are almost too encapsulated for a beginner to keep track. As a result, developing the first features often consisted of jumping from one file to another and back again. Due to the daily stand-ups and the CI, this problem was detected early, and therefore processes were defined for the implementation of the Redux and NgRx structure, see chapters 3.5.2 and 3.5.3.
+\\[\baselineskip]
+Nevertheless, the first days were spent mainly with learning how to develop with reactive programming efficiently. However, above all, there were significant advantages in using this pattern and the module-based layout of the project. By encapsulating the software components, new features could be added without having to refactor a significant part of existing software components. As described in chapter 3.5.2, the actions, reducers, states, selectors, effects, and services have to be extended for a new feature but only if the logic of the new feature requires a global state.
+\\[\baselineskip]
+Some minor changes have to occur in the HTML file of the parent component because the new feature has to be integrated. Also, changes to the SCSS file could be likely, but through the use of BEM, most of the work would consist of extending the file instead. 
+\\[\baselineskip]
+Real changes to already existing components will only have to happen if an already existing feature has to be altered or extended. Opposed to the old SharePoint application, where care had to be taken to ensure that an injected JavaScript code does not affect the site to be extended and a manager class manages more than it should, thereby influencing other software components, extending the Angular application is much more comfortable and far less time-consuming.
+\\[\baselineskip]
+Not much can be said about the maintenance work because so far no maintenance tasks have been incurred which affected the Angular application. Incurred maintenance work of this project has so far only affected configurations regarding SharePoint. However, if maintenance work has to be done for the Angular project, each member of the development team can now solve the problems compared to the old SharePoint solution where just one developer had enough knowledge to solve the arisen issues.
+\\[\baselineskip]
+However, to allow maintenance to be performed on the application by other development teams, at least one of these teams members should have knowledge of reactive programming in Angular with Redux. Since the steep learning curve of the applied methods in addition to understanding the entire software architecture would be too much effort, to resolve just one maintenance task. Nonetheless, if the necessary knowledge about the used technologies is available, then with Redux DevTools the application can be examined for sources of error. Also, the logs automatically generated by SharePoint can be viewed. If a bug is found, solving it would probably only affect the particular component where the bug is, because of how the communication between the software components was designed, as described in chapter 3.4. If on the other hand the issue is caused by a wrong implementation of the Redux and NgRx structure multiple components could be affected.
+\\[\baselineskip]
+The maintainability of the Angular application could be increased even further by installing server-side logging ourselves instead of using the automatic logging of SharePoint. This addition would lead to not having to require trusting the implementation of SharePoint's logging. Furthermore, depending on the implemented logging framework additional functionalities, like getting notified if errors are thrown or detailed error reports including the values of the last state before the error occurred, could be utilized (notifications if errors are thrown, e.g.).
 
 \section{Results}
 presenting finished solution
@@ -451,10 +469,22 @@ presenting finished solution
 
 
 \chapter{Conclusion \& Future Work}
+Which changes have to be made in the project so that the application or already existing components can be extended in functionality?
+Is the application more maintainable because it was implemented in a new project instead of the SharePoint project?
+
+Zusammenfassend kann gesagt werden, dass eine Applikation entwickelt wurde, welche nur Abhängigkeiten vom SharePoint durch ihre Services hat. Würde in der Zukunft
+
+herausgefunden wurde:
+also extensibility, maintenance and encapsulation can more easily be improved when starting at zero,
 Angular and RP works great together;
 falls SharePoint für etwas anderes ersetzt werden soll müssten nur neue services für die neue API erstellt werden;
-Other Developer teams can also work on maintenance tasks because knowledge about SharePoint is not really necessary, which was not possible before,
 
+war ein Erfolg da schlussendlich Kunde zufrieden, Projekt konnte im erlaubten Zeitrahmen bleiben,
+better for company to have knowledge in Angular than in Sharepoint 2013 (because more projects also use angular),
+
+future work:
+könnte versucht werden die blog features in das alte SharePoint Projekt einzubauen um herauszufinden ob die Entwicklungszeit kürzer oder länger dauert als das Angular Projekt,
+ob ab wann das Redux pattern eingesetzt werden soll von der größe der Applikation abhängt und ob durch Redux zu viel Kapselung von Software Components entstand, somit das Projekt zu komplex wird um einem anderem Entwicklerteam Wartungstasks zu übergeben. Auf jeden Fall wäre das bisherige Problem, das wenige Wissen über SharePoint, was das bearbeiten von Wartungstasks betrifft kaum noch vorhanden, da nur die services eine Abhängigkeit zum SharePoint haben.
 
 
 % Hier beginnen die Verzeichnisse.
