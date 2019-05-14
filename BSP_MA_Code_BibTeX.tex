@@ -76,10 +76,10 @@
 \studentnumber{1610257044}
 \supervisor{DI Thomas Rongitsch}
 \place{Vienna}
-\kurzfassung{text}
-\schlagworte{schlagwort1}
-\outline{text}
-\keywords{keyword1}
+\kurzfassung{kurzfass}
+\schlagworte{SharePoint 2013, Angular, Reactive Programming, Software Architektur}
+\outline{abstract}
+\keywords{SharePoint 2013, Angular, Reactive Programming, Software Architecture}
 
 \begin{document}
 
@@ -138,7 +138,7 @@
 
 \maketitle
 \chapter{Introduction}
-SharePoint \cite{SharePoint} is an application developed by Microsoft that supports team collaboration by sharing information, accessible through a browser, in the form of files and sites on specific topics in an intranet. SharePoint Server 2013 is one of several versions of SharePoint. Currently, the latest Version is SharePoint Server 2019 \cite{SharePoint}. One of the reasons why more than 200,000 organizations worldwide utilize SharePoint is the ability to customize each tool, library, and control it consist of \cite{SharePoint} \cite{SharePointDevRef}.
+SharePoint \cite{SharePoint} is an application developed by Microsoft that supports team collaboration by sharing information, accessible through a browser, in the form of files and sites on specific topics in an intranet. SharePoint Server 2013 is one of several versions of SharePoint. Currently, the latest Version is SharePoint Server 2019 \cite{SharePoint}. One of the reasons why more than 200,000 organizations worldwide utilize SharePoint is the ability to customize each tool, library, and control it consists of \cite{SharePoint} \cite{SharePointDevRef}.
 \\[\baselineskip]
 This work is part of a company project to extend the SharePoint Blog feature. The extension of this feature was ordered by a customer whose company uses SharePoint Server 2013 as a solution for their intranet. This SharePoint was configured in 2015 as part of a project commissioned by the customer. Some of the default features of SharePoint were adapted to the customer's needs, and new features were developed as well. Over time, individual features have been modified and new ones have been added. However, none of the other changes have been as extensive as the requirements for the new blog feature. The following were the demanded features: 
 \begin{itemize}
@@ -160,7 +160,7 @@ This thesis aims to describe the development phase of this project. Thereby, the
 \\[\baselineskip]
 Therefore the following research questions are the focus of this work:
 \begin{itemize}
-\item What options are there for integrating a modern Angular web application into an old SharePoint Server 2013 version in order to benefit from the advantages of modern technologies?
+\item What options exist for integrating a modern Angular web application into an old SharePoint Server 2013 in order to benefit from the advantages of modern technologies?
 \item What must be taken into account in the development of the new project so that the resulting components can also be extended in their functionality in the future?
 \end{itemize}
 
@@ -461,9 +461,9 @@ Angular is an already mature, yet modern framework that is praised by many devel
 \\[\baselineskip]
 Reactive programming, after some initial difficulties, proved to be a powerful tool for the development of user interfaces. Through the library, RxJS observables and operators could be utilized to respond to new incoming data immediately. Using NgRx's store, effects, and selectors, as well as Redux's actions, reducers, and states, a process could be designed that allows a software component not to worry about requesting data and changing the state. As a result, software components mainly consist of view logic, which made it comfortable to test the logic of data retrieval and state change.
 \\[\baselineskip]
-As a result of this project, an Angular application was developed by employing reactive programming approaches. This application's services are the only software components which depend on SharePoint Server 2013. If in the future the SharePoint version were to be updated or a completely different technology was adopted for the intranet, this application could continue to be operated by reimplementing the services. Also, as long as the best practices for software architecture continue to be applied, any functionality can be added to the application without creating a chaotic project structure as in the old SharePoint application.
+The result of this project was an Angular application which was developed by employing reactive programming approaches. This application's services are the only software components which depend on SharePoint Server 2013. If in the future the SharePoint version were to be updated or a completely different technology was adopted for the intranet, this application could continue to be operated by reimplementing the services. Also, as long as the best practices for software architecture continue to be applied, any functionality can be added to the application without creating a chaotic project structure as in the old SharePoint application.
 \\[\baselineskip]
-In this thesis, the Redux Pattern in combination with NgRx was also discussed in some parts. During the implementation of this structure, the idea came up when the Redux pattern should be applied. It would be interesting to evaluate how long a component can be managed with a local state without the code becoming confusing. The longer a component could manage its state, the less often one would have to implement the complete Redux and NgRx structure, which costs a lot of time to do. However, this would mean that some software components would not be as encapsulated as they would be otherwise, but the question is whether so much encapsulation is even advantageous or results in a too complicated solution.
+In this thesis, the Redux Pattern in combination with NgRx was also discussed in some parts. During the implementation of this structure, the idea came up when the Redux pattern should be applied. It would be interesting to evaluate how long a component can be managed with a local state without the code becoming confusing. The longer a component could manage its state, the less often one would have to implement the complete Redux and NgRx structure, which costs a lot of time to do. However, this would mean that some software components would not be as encapsulated as they would be otherwise. The question is whether so much encapsulation is even advantageous or results in a too complicated solution.
 
 
 % Hier beginnen die Verzeichnisse.
