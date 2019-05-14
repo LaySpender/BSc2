@@ -142,11 +142,11 @@ SharePoint \cite{SharePoint} is an application developed by Microsoft that suppo
 \\[\baselineskip]
 This work is part of a company project to extend the SharePoint Blog feature. The extension of this feature was ordered by a customer whose company uses SharePoint Server 2013 as a solution for their intranet. This SharePoint was configured in 2015 as part of a project commissioned by the customer. Some of the default features of SharePoint were adapted to the customer's needs, and new features were developed as well. Over time, individual features have been modified and new ones have been added. However, none of the other changes have been as extensive as the requirements for the new blog feature. The following were the demanded features: 
 \begin{itemize}
-\item The design of the default blog site should be redesigned.
+\item The design of the default blog site should be overhauled.
 \item Blog posts should be able to be labeled with tags. 
 \item Filtering of blog entries depending on categories and tags should be added.
 \item User should be able to subscribe to tags and categories. 
-\item The role alert manager should be added.
+\item The role "alert manager" should be added.
 \item An alert manager should be able to subscribe other users to tags or categories.
 \item The automatically generated sidebar from SharePoint should be hidden. 
 \item Pagination should be added.
@@ -154,75 +154,52 @@ This work is part of a company project to extend the SharePoint Blog feature. Th
 \item Features should be hidden or displayed depending on user rights.
 \end{itemize}
 
-According to an estimate of the cost of all features, the three-person development team would be busy working on this project for several weeks. However, instead of continuing to build on the legacy SharePoint project, the idea was to rebuild the default SharePoint blog feature with the desired extensions in Angular with the latest state of the art practices and then integrate the application in SharePoint. One reason why this approach was chosen was that the estimated effort of such an Angular application stayed within reason of the ordered project. Another reason was that extending the functionality of SharePoint's default features sometimes had to be resolved by injecting JavaScript code, which leads to a chaotic project structure. The last reason was that only one developer of the company knew how to find all the necessary files to maintain the old SharePoint project properly.
+According to an estimate of the cost of all features, the three-person development team would be busy working on this project for several weeks. However, instead of continuing to build on the legacy SharePoint project, the idea was to rebuild the default SharePoint blog feature with the desired extensions in Angular with the latest state of the art practices and then integrate the application in SharePoint. One reason why this approach was chosen was that the estimated effort of such an Angular application stayed within reason of the ordered project. Another reason was that extending the functionality of SharePoint's default features sometimes had to be resolved by injecting JavaScript code, which leads to a chaotic project structure. The last reason was that the old Sharepoint project structure was so disorganized after all extensions, that only developers who worked with the application from the beginning on could still maintain it.
 \\[\baselineskip]
 This thesis aims to describe the development phase of this project. Thereby, the best practice methods employed in organizing the project, planning the software architecture and developing the application will be discussed. In addition, the effectiveness of quality assurance through repetitive processes such as code reviews, pull requests, and Test Driven Development will be addressed. All of the methods mentioned above were adopted in the development of this application because the goal was to develop software that could be extended much more straightforward with new features and needed less effort and time to maintain than the old SharePoint project.
 \\[\baselineskip]
 Therefore the following research questions are the focus of this work:
 \begin{itemize}
-\item Which changes have to be made in the project so that the application or already existing components can be extended in functionality?
-\item Is the blog feature more maintainable because it was implemented in a new project instead of the old SharePoint project?
+\item What options are there for integrating a modern Angular web application into an old SharePoint Server 2013 version in order to benefit from the advantages of modern technologies?
+\item What must be taken into account in the development of the new project so that the resulting components can also be extended in their functionality in the future?
 \end{itemize}
 
 \clearpage
 
 
 \chapter{Tools \& Frameworks} 
-what will be presented in this chapter (reactive programming; tools to use this paradigm with: ReactiveX, Redux and NgRx; Angular; why typescript; what components are; introduction of important tools used by angular: npm, webpack and babel),
-For the implementation of this project a technology had to be decided on that meets the requirements of being integrated into and communicate with SharePoint 2013.
+In this chapter, a brief look at reactive programming and Angular is given. In section reactive programming, the libraries and patterns utilized to develop the reactive application are explained. In the section Angular the functionalities of the framework are introduced.
 
 \section{Reactive Programming}
-If an interaction with a reactive application takes place, a event occurs which the software will respond to by reacting on it in a certain way. Therefore a reactive software system could be any application with a graphical user interface (GUI) reacting on user input, a network monitoring service reacting on certain changes of the network or even a simple calculator reacting on button presses. 
-
-reactive applications can become complex because of a mixed combination of data and control flow \cite[p.~1]{PositivEffectOfRP}, 
-two main approaches to implement a reactive application (also explain figure):
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=0.75\linewidth]{PICs/pseudo_Code_reactive_2_ways.eps}
-\caption{JavaScript-like pseudo code of the observer pattern approach (left) and the signals and vars approach (right) \cite[p.~797]{DebuggingRP} \cite[p.~3]{PositivEffectOfRP}}\label{Fig1}
-\end{figure}
-traditional approach observer pattern \cite[p.~360-372]{ObserverDP}, decouples event consumers from event producers \cite[p.~953]{RPWalkthrough}, (in object oriented programming using observer pattern, decouples observers or subscribers from observables or subjects, observers subscribe to observables, observables do not know their subscribers, when observables change their state they notify their observers depending on the implementation this can be done through emitting events. When a subscriber learns of a change in the state of the subject, he adjusts his state to that of the subject. \cite[p.~363]{ObserverDP}),
-vs the other way, what is reactive programming: programming paradigm supporting language-level abstractions \cite[p.~953]{RPWalkthrough}, The four principles all implementations of reactive programming pursue are:
-\begin{itemize}
-\item Declarativeness: declaring how the states of the components depend on each other, not how to retrieve the state when changes occur \cite[p.~2]{PositivEffectOfRP}.
-\item Abstraction over change propagation: No need to manually update dependencies, propagation of change is handled by language runtime \cite[p.~2]{PositivEffectOfRP}.
-\item Composability: Composing reactive computations through abstractions \cite[p.~2]{PositivEffectOfRP}.
-\item Favoring data flow over control flow: Calculations of the software system are triggered by new data or events and are not depending on the execution of the control flow \cite[p.~2]{PositivEffectOfRP}.
-\end{itemize}
-einiges an Forschung wurde schon betrieben und nach der Einführung von funcitonal reactive programming in Haskell wurde dieses konzept auch in Scheme (FrTime \cite{FrTime}), Scala (Scala.react \cite{DeprecatingOP}) und JavaScript (Flapjax \cite{Flapjax}) implementiert, sogar wurde in Microsofts Reactive Extensions (RX or ReactiveX) konzepte von reactive programming implementiert \cite[p.~954]{RPWalkthrough} \cite[p.~796]{DebuggingRP} \cite[p.~2]{PositivEffectOfRP}
-(signals or behaviours: time changing values, treated as constraints of the language runtime, when an inconcistency of a signal or behaviour is detected a recalculation is triggered \cite[p.~797]{DebuggingRP} \cite[p.~3]{PositivEffectOfRP}, can either depend on other signals or vars, vars are reactive values like signals but without dependencies \cite[p.~2]{PositivEffectOfRP}), less error prone, easier to understand, still immature field -> lack of developer tools like debuggers \cite[p.~796]{DebuggingRP}
-
-\subsection{ReactiveX}
-general introduction (what is it \cite{ReactiveExtensions} \cite[p.~291]{RxAngular5Prj} (von Microsoft aber open source), why should it be used) \cite{ReactiveX}, bringing functional-reactive-programming-like reactivity (FRP-like reactivity \cite{PositivEffectOfRP}
-marble-diagrams
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=0.5\linewidth]{PICs/marble_diagram.eps}
-\caption{An example of a marble diagram, which is mostly used for explaining transformations of observables \cite{RxObservables}.}\label{Fig2}
-\end{figure}
-observables, observables background with reactor pattern \cite{RxObservables} \cite[p.~292]{RxAngular5Prj} \cite[p.~310]{RxAngular5Prj}
-hot and cold \cite{RxObservables}
-
-\subsection{Redux}
-general introduction (what is it, why should it be used), \cite{Redux}, motivation why redux \cite{ReduxIntroMoti}, core concept \cite{ReduxIntroCC}, three principles \cite{ReduxIntro3P}, figure for explanation
-
-\subsection{NgRx}
-general introduction (what is it, why should it be used), \cite{Ngrx}, ng/store, effects
+If an interaction with a reactive application takes place, a event occurs which the software will respond to by reacting on it in a certain way. Therefore a reactive software system could be any application with a graphical user interface (GUI) reacting on user input, a network monitoring service reacting on certain changes of the network or even a simple calculator reacting on button presses \cite[p.~728]{DebuggingRPWithRInspector}. 
+\\[\baselineskip]
+However, reactive applications can become complicated because they have a mixed combination of data and control flow. In order to make the development of reactive applications easier, two approaches have been developed \cite[p.~1]{PositivEffectOfRP}.
+\\[\baselineskip]
+One of them is the observer pattern \cite[p.~360]{ObserverDP}. With this pattern event consumers, so-called observers, are decoupled from event producers, so-called observables \cite[p.~953]{RPWalkthrough}. In order for an observer to learn of a state change of the observable, the observer first has to subscribe to the observable \cite[p.~362]{ObserverDP}. After the subscription, the observable adds the observer to its subscriber list. Hence, when the state of the observable changes, a notification is sent to all observers. Then the observers adjust their state to that of the observable \cite[p.~363]{ObserverDP}.
+\\[\baselineskip]
+The second method is often referred to as the actual reactive programming approach. It describes how reactive programming is a programming paradigm that supports language-level abstractions \cite[p.~953]{RPWalkthrough}. Generally speaking, this method utilizes signals to develop reactive applications. A signal is a time-changing value that is treated as a constraint by the language runtime. This means that if there is a change that causes a signal to become inconsistent, the language runtime will trigger a recalculation \cite[p.~797]{DebuggingRP} \cite[p.~3]{PositivEffectOfRP}. To define a signal, it must be dependent on other reactive values. In order for this not to be an endless cycle, vars have been developed which are reactive like signals, but vars need no dependency on other reactive values \cite[p.~2]{PositivEffectOfRP}. Signals have the advantage compared to the Observer Pattern that they are less error-prone and have a flatter learning curve \cite[p.~796]{DebuggingRP}. However, signals are not yet so widespread, as research is not as far as with the Observer pattern.
+\\[\baselineskip]
+Nevertheless, some research has already been carried out, whereby approaches of reactive programming in Haskell \cite{Haskell} as so-called functional reactive programming was introduced. After the introduction in Haskell, this concept was also implemented in Scheme (FrTime \cite{FrTime}), Scala (Scala.react \cite{DeprecatingOP}) and JavaScript (Flapjax \cite{Flapjax}). Some Concepts have also been implemented in the ReactiveX \cite{ReactiveX} library developed by Microsoft \cite[p.~954]{RPWalkthrough} \cite[p.~796]{DebuggingRP} \cite[p.~2]{PositivEffectOfRP}.
+\\[\baselineskip]
+ReactiveX is a library that employs observable sequences to develop asynchronous and event-based applications. ReactiveX builds on the Observer Pattern but also provides developers with operators to transform observables, thereby changing the data received before notifying observers \cite{ReactiveXIntro}. Also, ReactiveX offers so-called hot and cold observables. A hot observable begins to emit data as soon as the data arrives from the time of its creation. In contrast, a cold observable does not start until an observer subscribes to the data. Thus, it can be ensured by cold observables that the respective observers always get the complete data sequence \cite{RxObservables}. For this project, the JavaScript implementation of ReactiveX RxJS \cite{RxJS} was applied.
+\\[\baselineskip]
+For the state management of this application, the Redux Pattern \cite{Redux} in combination with NgRx \cite{Ngrx} was chosen. The idea of the Redux pattern involves creating a store in which the latest state of the application is always available \cite{ReduxIntroCC}. This state can only be changed by reducers. Reducers are functions that are triggered by an action and accept a copy of the current state as a parameter \cite{ReduxIntroCC}. The reducer will then change this state before returning the state to the store \cite{ReduxIntroCC}. Actions are dispatched by the software components to trigger changes of the state via the reducers. 
+\\[\baselineskip]
+NgRx builds on Redux and offers additional selectors and effects. Selectors can be called by other software components to load data from the store \cite{NgrxSelector}. In most cases, a selector is responsible for a property of the state, but operations can also be performed in the selectors, for example, to combine the values of several properties of the state before the data is returned \cite{NgrxSelector}. Effects are designed to isolate side effects such as calling services to request data. Actions can be dispatched to trigger an effect, which means that the components only have to dispatch actions to manage their state \cite{NgrxEffect}.
 
 
 \section{Angular}
-what is angular? what is it for? \cite[p.~xxiv-xxix]{RxAngular5Prj}, dependency injection \cite[p.~]{YakovFainAngular} \cite[p.~211]{RxAngular5Prj}, data binding, \cite[p.~]{YakovFainAngular}, bundeling code in modules \cite[p.~116]{RxAngular5Prj}
-polyfills \cite[p.~18]{RxAngular5Prj}
-
-\subsection{TypeScript}
-general introduction \cite[p.~19]{RxAngular5Prj} \cite{TypeScript} \cite[p.~41]{RxAngular5Prj} (what is it, why should it be used),
-
-\subsection{Components}
-general introduction \cite[p.~22]{RxAngular5Prj} \cite[p.~89]{RxAngular5Prj} \cite[p.~159]{RxAngular5Prj} (what is it, why should it be used, structured inside of a module), 
-
-\subsection{npm}
-general introduction \cite[p.~71]{RxAngular5Prj} (what is it, why should it be used), 
-tool to install everything js based
+Angular is a platform and framework from Google to make developing front-end web applications more accessible \cite[p.~109]{YakovFainAngular}. The applications developed in Angular are often referred to as single page applications (SPA) because most of the code is executed on the client rather than on the server. The application itself decides what should happen when the user interacts with the user interface. Only very rarely it is necessary that the site must be reloaded \cite[p.~xxiv,~3]{RxAngular5Prj}.
+\\[\baselineskip]
+In 2009 AngularJS was released and due to great success was redeveloped with additional features as Angular 2 \cite[p.~109]{YakovFainAngular} \cite[p.~15]{RxAngular5Prj}. AngularJS was developed in JavaScript and since Angular 2 TypeScript \cite{TypeScript} was used for the development of Angular \cite[p.~xxiv]{RxAngular5Prj}. TypeScript is a typed superset of JavaScript meaning that JavaScript code can be applied without any problems in a TypeScript program \cite[p.~41]{RxAngular5Prj}. Since the release of Angular 2, some time has passed and now the current version of Angular is Angular 7, which was employed for the development of this project.
+\\[\baselineskip]
+Angular offers lots of functionality like for example dependency injection \cite[p.~211]{RxAngular5Prj}, data bindings \cite[p.~111]{YakovFainAngular}, components \cite[p.~89]{RxAngular5Prj}, modules \cite[p.~115]{RxAngular5Prj}, and more. It was important for this project to utilize dependency injection to keep the code of the software components as clean as possible, to encapsulate each small feature of the application in different components and to structure the components in modules for a better overview. 
+\\[\baselineskip]
+Furthermore, it was necessary to ensure that the application runs in Internet Explorer \cite{IE} since many of the functionalities of SharePoint are only supported in Internet Explorer. However, since Internet Explorer is already an older browser, which is not up to date with the latest versions of ECMAScript, so-called polyfills had to be integrated to ensure that every part of the code of the application could be executed. Polyfills are files that can be configured to implant missing JavaScript APIs into browsers \cite[p.~18]{RxAngular5Prj}.
+\\[\baselineskip]
+A component defines a class which indicates which data the component requires, which events the component can emit and which dependencies to other files a component has \cite[p.~89]{RxAngular5Prj}. By connecting to an HTML template via one-way or two-way data binding, a component can display its data \cite[p.~100,~108]{RxAngular5Prj}. In order for a component to react to the behavior of the user, HTML events can be caught and handled by the logic of the class \cite[p.~111]{RxAngular5Prj}. To customize the design of the HTML template, each component has a CSS file \cite[p.~89]{RxAngular5Prj}. Since each component defines a selector, other components can call them in their HTML template. Thus, components can create a tree-like project structure where one root component calls multiple parent components which then also call other parent and child components \cite[p.~89,~115]{RxAngular5Prj}.
+\\[\baselineskip]
+All functionalities of Angular are housed in so-called node modules, and some of them are also dependent on other node modules. In order that no time is wasted when having to install all required node modules the node package manager (npm) \cite{Npm} should be employed. With this tool, node modules can be installed, updated or deleted \cite[p.~71]{RxAngular5Prj}. To use npm, Node, a JavaScript Runtime, has to be installed which after the installation is finished will create command-line access for the "npm" command. By specifying different arguments, the node modules of an Angular project can be managed with the command "npm" \cite[p.~69,~71]{RxAngular5Prj}.
 
 \clearpage 
 
@@ -234,7 +211,7 @@ To successfully complete this project with as few errors as possible and to deve
 \\[\baselineskip]
 The scrum team consisted of three developers, one of whom was one half of his time involved in scrum master activities, and one product owner. The product owner took care of analyzing the current problems together with the customer in order to develop a possible solution. Based on these requirements, a first version of the backlog was created to give the development team an overview of the product to be developed. Subsequently, the developer team estimated the story points of each user story using planning poker. With this information the product owner calculated the offer for the customer. After the contract was signed the scrum team met for a project kick-off meeting to discuss the highest priority user stories and refine the backlog for the first sprint.
 \\[\baselineskip]
-The length of a sprint for this project was one week, since at first the user stories were small enough so that the commitment to the sprint goal could be kept. Later, the length of a sprint was increased to two weeks, because on the one hand some user stories were too large to finish in a week and on the other hand a developer had to be assigned to other projects for some time. Sprints were planned using the user-story- and task-board-backlog tools provided by the company's TFS (Team Foundation Server) \cite{TFS}. After each sprint a short retro was held on the day of the planning where the finished user stories and the problems encountered while implementing them were deliberated. In addition when it occurred that a commitment could not be kept, the reasons were sought to make adjustments to user stories that could be affected. 
+The length of a sprint for this project was one week, since at first the user stories were small enough so that the commitment to the sprint goal could be kept. Later, the length of a sprint was increased to two weeks, because on the one hand some user stories were too large to finish in a week and on the other hand a developer had to be assigned to other projects for some time. Sprints were planned using the user-story- and task-board-backlog tools provided by the company's Team Foundation Server (TFS) \cite{TFS}. After each sprint a short retro was held on the day of the planning where the finished user stories and the problems encountered while implementing them were deliberated. In addition when it occurred that a commitment could not be kept, the reasons were sought to make adjustments to user stories that could be affected. 
 \\[\baselineskip]
 Every day a daily stand-up was held where each developer announced the current status of their to them assigned user stories. If there was any difficulty implementing a user story, after the meeting, the task in question was discussed with at least one other developer. If no solution was found, the product owner was contacted to discuss the problem. This led in most cases to an adaptation of the acceptance criteria of the user story, only rarely the customer had to be contacted to discuss the respective requirement. 
 \\[\baselineskip]
@@ -434,31 +411,8 @@ Furthermore, a "cold" observable was created to define the expected value of the
 
 \clearpage
 
-
-\chapter{Discussion}
-The following sections address the implementation difficulties, discuss the methods used to develop the project, and present the final product.
-
-\section{Development}
-The development time of this project was initially almost equated with the expansion of the old project. However, instead of the estimated 358 hours, a total of 434 hours were worked on the Angular project. This 76-hour difference may be due to the initial steep learning curve of reactive programming, and Redux combined with Angular. Since 2 of 3 developers had no experience with reactive programming or the Redux pattern before the project.
-\\[\baselineskip]
-In addition, the implementation of the services was underestimated. One of the reasons for this was because the developer team initially thought the SharePoint REST API supported fetching all the data stored in SharePoint. However, as described in chapter 3.4.2, several solutions had to be developed to get all the required data from SharePoint. Especially, a lot of time was lost in developing the alert WCF Data Services. The task was estimated to take 13 hours but ended up taking 27.66 hours.
-\\[\baselineskip]
-The Redux pattern in combination with NgRx initially caused confusion because the different components (action, reducer, state, selector, effect, service) are almost too encapsulated for a beginner to keep track. As a result, developing the first features often consisted of jumping from one file to another and back again. Due to the daily stand-ups and the CI, this problem was detected early, and therefore processes were defined for the implementation of the Redux and NgRx structure, see chapters 3.5.2 and 3.5.3.
-\\[\baselineskip]
-Nevertheless, the first days were spent mainly with learning how to develop with reactive programming efficiently. However, above all, there were significant advantages in using this pattern and the module-based layout of the project. By encapsulating the software components, new features could be added without having to refactor a significant part of existing software components. As described in chapter 3.5.2, the actions, reducers, states, selectors, effects, and services have to be extended for a new feature but only if the logic of the new feature requires a global state.
-\\[\baselineskip]
-Some minor changes have to occur in the HTML file of the parent component because the new feature has to be integrated. Also, changes to the SCSS file could be likely, but through the use of BEM, most of the work would consist of extending the file instead. 
-\\[\baselineskip]
-Real changes to already existing components will only have to happen if an already existing feature has to be altered or extended. Opposed to the old SharePoint application, where care had to be taken to ensure that an injected JavaScript code does not affect the site to be extended and a manager class manages more than it should, thereby influencing other software components, extending the Angular application is much more comfortable and far less time-consuming.
-\\[\baselineskip]
-Not much can be said about the maintenance work because so far no maintenance tasks have been incurred which affected the Angular application. Incurred maintenance work of this project has so far only affected configurations regarding SharePoint. However, if maintenance work has to be done for the Angular project, each member of the development team can now solve the problems compared to the old SharePoint solution where just one developer had enough knowledge to solve the arisen issues.
-\\[\baselineskip]
-However, to allow maintenance to be performed on the application by other development teams, at least one of these teams members should have knowledge of reactive programming in Angular with Redux. Since the steep learning curve of the applied methods in addition to understanding the entire software architecture would be too much effort, to resolve just one maintenance task. Nonetheless, if the necessary knowledge about the used technologies is available, then with Redux DevTools the application can be examined for sources of error. Also, the logs automatically generated by SharePoint can be viewed. If a bug is found, solving it would probably only affect the particular component where the bug is, because of how the communication between the software components was designed, as described in chapter 3.4. If on the other hand the issue is caused by a wrong implementation of the Redux and NgRx structure multiple components could be affected.
-\\[\baselineskip]
-The maintainability of the Angular application could be increased even further by installing server-side logging ourselves instead of using the automatic logging of SharePoint. This addition would lead to not having to require trusting the implementation of SharePoint's logging. Furthermore, depending on the implemented logging framework additional functionalities, like getting notified if errors are thrown or detailed error reports including the values of the last state before the error occurred, could be utilized (notifications if errors are thrown, e.g.).
-
-\section{Results}
-presenting finished solution
+\chapter{Results}
+In the following Figures \ref{FigBlogList}, \ref{FigBlogDetail}, \ref{FigMyAlerts} and \ref{FigMandatoryAlerts} the different pages of the developed application can be seen.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=1\linewidth]{PICs/blog_list_page.eps}
@@ -481,24 +435,35 @@ presenting finished solution
 \end{figure}
 \clearpage
 
+\chapter{Discussion}
+The development time of this project was initially almost equated with the expansion of the old project. However, instead of the estimated 358 hours, a total of 434 hours were worked on the Angular project. This 76-hour difference may be due to the initial steep learning curve of reactive programming, and Redux combined with Angular. Since 2 of 3 developers had no experience with reactive programming or the Redux pattern before the project.
+\\[\baselineskip]
+In addition, the implementation of the services was underestimated. One of the reasons for this was because the developer team initially thought the SharePoint REST API supported fetching all the data stored in SharePoint. However, as described in chapter 3.4.2, several solutions had to be developed to get all the required data from SharePoint. Especially, a lot of time was lost in developing the alert WCF Data Services. The task was estimated to take 13 hours but ended up taking 27.66 hours.
+\\[\baselineskip]
+The Redux pattern in combination with NgRx initially caused confusion because the different components (action, reducer, state, selector, effect, service) are almost too encapsulated for a beginner to keep track. As a result, developing the first features often consisted of jumping from one file to another and back again. Due to the daily stand-ups and the CI, this problem was detected early, and therefore processes were defined for the implementation of the Redux and NgRx structure, see chapters 3.5.2 and 3.5.3.
+\\[\baselineskip]
+Nevertheless, the first days were spent mainly with learning how to develop with reactive programming efficiently. However, above all, there were significant advantages in using this pattern and the module-based layout of the project. By encapsulating the software components, new features could be added without having to refactor a significant part of existing software components. As described in chapter 3.5.2, the actions, reducers, states, selectors, effects, and services have to be extended for a new feature but only if the logic of the new feature requires a global state.
+\\[\baselineskip]
+Some minor changes have to occur in the HTML file of the parent component because the new feature has to be integrated. Also, changes to the SCSS file could be likely, but through the use of BEM, most of the work would consist of extending the file instead. 
+\\[\baselineskip]
+Real changes to already existing components will only have to happen if an already existing feature has to be altered or extended. Opposed to the old SharePoint application, where care had to be taken to ensure that an injected JavaScript code does not affect the site to be extended and a manager class manages more than it should, thereby influencing other software components, extending the Angular application is much more comfortable and far less time-consuming.
+\\[\baselineskip]
+Not much can be said about the maintenance work because so far no maintenance tasks have been incurred which affected the Angular application. Incurred maintenance work of this project has so far only affected configurations regarding SharePoint. However, if maintenance work has to be done for the Angular project, each member of the development team can now solve the problems compared to the old SharePoint solution where just one developer had enough knowledge to solve the arisen issues.
+\\[\baselineskip]
+However, to allow maintenance to be performed on the application by other development teams, at least one of these teams members should have knowledge of reactive programming in Angular with Redux. Since the steep learning curve of the applied methods in addition to understanding the entire software architecture would be too much effort, to resolve just one maintenance task. Nonetheless, if the necessary knowledge about the used technologies is available, then with Redux DevTools the application can be examined for sources of error. Also, the logs automatically generated by SharePoint can be viewed. If a bug is found, solving it would probably only affect the particular component where the bug is, because of how the communication between the software components was designed, as described in chapter 3.4. If on the other hand the issue is caused by a wrong implementation of the Redux and NgRx structure multiple components could be affected.
+\\[\baselineskip]
+The maintainability of the Angular application could be increased even further by installing server-side logging ourselves instead of using the automatic logging of SharePoint. This addition would lead to not having to require trusting the implementation of SharePoint's logging. Furthermore, depending on the implemented logging framework additional functionalities, like getting notified if errors are thrown or detailed error reports including the values of the last state before the error occurred, could be utilized (notifications if errors are thrown, e.g.).
+\clearpage
+
 
 \chapter{Conclusion \& Future Work}
-Which changes have to be made in the project so that the application or already existing components can be extended in functionality?
-Is the application more maintainable because it was implemented in a new project instead of the SharePoint project?
-
-Zusammenfassend kann gesagt werden, dass eine Applikation entwickelt wurde, welche nur Abhängigkeiten vom SharePoint durch ihre Services hat. Würde in der Zukunft
-
-herausgefunden wurde:
-also extensibility, maintenance and encapsulation can more easily be improved when starting at zero,
-Angular and RP works great together;
-falls SharePoint für etwas anderes ersetzt werden soll müssten nur neue services für die neue API erstellt werden;
-
-war ein Erfolg da schlussendlich Kunde zufrieden, Projekt konnte im erlaubten Zeitrahmen bleiben,
-better for company to have knowledge in Angular than in Sharepoint 2013 (because more projects also use angular),
-
-future work:
-könnte versucht werden die blog features in das alte SharePoint Projekt einzubauen um herauszufinden ob die Entwicklungszeit kürzer oder länger dauert als das Angular Projekt,
-ob ab wann das Redux pattern eingesetzt werden soll von der größe der Applikation abhängt und ob durch Redux zu viel Kapselung von Software Components entstand, somit das Projekt zu komplex wird um einem anderem Entwicklerteam Wartungstasks zu übergeben. Auf jeden Fall wäre das bisherige Problem, das wenige Wissen über SharePoint, was das bearbeiten von Wartungstasks betrifft kaum noch vorhanden, da nur die services eine Abhängigkeit zum SharePoint haben.
+Angular is an already mature, yet modern framework that is praised by many developers. Due to the modular project structure and the loosely coupled components, an Angular application always remains clear and understandable. Through npm, a lot of time can be saved by not having to worry about managing node modules and being able to quickly add, update or remove libraries or developer tools if necessary.  Furthermore, reactive programming approaches can be easily integrated into Angular, possibly because NgRx is a part of Angular and was meant to be used with RxJS. 
+\\[\baselineskip]
+Reactive programming, after some initial difficulties, proved to be a powerful tool for the development of user interfaces. Through the library, RxJS observables and operators could be utilized to respond to new incoming data immediately. Using NgRx's store, effects, and selectors, as well as Redux's actions, reducers, and states, a process could be designed that allows a software component not to worry about requesting data and changing the state. As a result, software components mainly consist of view logic, which made it comfortable to test the logic of data retrieval and state change.
+\\[\baselineskip]
+As a result of this project, an Angular application was developed by employing reactive programming approaches. This application's services are the only software components which depend on SharePoint Server 2013. If in the future the SharePoint version were to be updated or a completely different technology was adopted for the intranet, this application could continue to be operated by reimplementing the services. Also, as long as the best practices for software architecture continue to be applied, any functionality can be added to the application without creating a chaotic project structure as in the old SharePoint application.
+\\[\baselineskip]
+In this thesis, the Redux Pattern in combination with NgRx was also discussed in some parts. During the implementation of this structure, the idea came up when the Redux pattern should be applied. It would be interesting to evaluate how long a component can be managed with a local state without the code becoming confusing. The longer a component could manage its state, the less often one would have to implement the complete Redux and NgRx structure, which costs a lot of time to do. However, this would mean that some software components would not be as encapsulated as they would be otherwise, but the question is whether so much encapsulation is even advantageous or results in a too complicated solution.
 
 
 % Hier beginnen die Verzeichnisse.
@@ -524,9 +489,11 @@ ob ab wann das Redux pattern eingesetzt werden soll von der größe der Applikat
     \acro{GUI}[GUI]{Graphical User Interface}
     \acro{HTML}[HTML]{Hypertext Markup Language}
     \acro{HTTP}[HTTP]{Hypertext Transfer Protocol}
+    \acro{NPM}[NPM]{Node Package Manager}
     \acro{REST}[REST]{Representational State Transfer}
     \acro{SASS}[SASS]{Syntactically Awesome Style Sheets}
     \acro{SCSS}[SCSS]{Sassy Cascading Style Sheets}
+    \acro{SPA}[SPA]{Single Page Application}
     \acro{SVG}[SVG]{Scaleable Vector Graphics}
     \acro{TDD}[TDD]{Test Driven Development}
     \acro{TFS}[TFS]{Team Foundation Server}
